@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}Service Request{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h2>Service Request</h2>
+        <hr>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            You should also request services through the official USP Multi-User Platform at
+            <a href="https://uspmulti.prp.usp.br/centrais/public/43" target="_blank" class="alert-link">https://uspmulti.prp.usp.br/centrais/public/43</a>.
+        </div>
+
+        <form id="requestForm" action="{{ url_for('main.servicos') }}" method="POST">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3 class="h5 card-title">Requested Strains</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="itemsTable">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th style="width:35%">Category</th>
+                                    <th style="width:15%">Sector</th>
+                                    <th style="width:15%">Unit Price (R$)</th>
+                                    <th style="width:12%">Quantity</th>
+                                    <th style="width:15%">Subtotal (R$)</th>
+                                    <th style="width:8%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="item-row">
+                                    <td>
+                                        <select name="categoria" class="form-select categoria-select" required>
+                                            <option value="">Select...</option>
+                                            {% for c in categorias %}
+                                            <option value="{{ c.id }}"
+                                                data-preco-publico="{{ c.preco_publico }}"
+                                                data-preco-privado="{{ c.preco_privado }}">
+                                                {{ c.nome }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="setor" class="form-select setor-select" required>
+                                            <option value="">Select...</option>
+                                            <option value="publico" data-mult="1">Public University</option>
+                                            <option value="privado" data-mult="2">Private Sector</option>
+                                        </select>
+                                    </td>
+                                    <td class="unit-price text-end">—</td>
+                                    <td>
+                                        <input type="number" name="quantidade" class="form-control quantidade" min="1" value="1" required>
+                                    </td>
+                                    <td class="subtotal text-end fw-bold">—</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-row" title="Remove">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-end fw-bold">Total</td>
+                                    <td class="text-end fw-bold fs-5" id="grandTotal">R$ 0,00</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="addRow">
+                        <i class="bi bi-plus-circle"></i> Add another strain
+                    </button>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3 class="h5 card-title">Contact Information</h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="nome" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Institution *</label>
+                            <input type="text" name="instituicao" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email *</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="telefone" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Additional Notes</label>
+                            <textarea name="observacoes" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-send"></i> Submit Request
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('itemsTable').querySelector('tbody');
+
+    function calcRow(row) {
+        const catSel = row.querySelector('.categoria-select');
+        const setorSel = row.querySelector('.setor-select');
+        const qty = parseInt(row.querySelector('.quantidade').value) || 0;
+        const priceEl = row.querySelector('.unit-price');
+        const subEl = row.querySelector('.subtotal');
+
+        if (!catSel.value || !setorSel.value || qty < 1) {
+            priceEl.textContent = '—';
+            subEl.textContent = '—';
+            return 0;
+        }
+
+        const opt = catSel.selectedOptions[0];
+        const isPrivado = setorSel.value === 'privado';
+        const price = isPrivado
+            ? parseFloat(opt.dataset.precoPrivado)
+            : parseFloat(opt.dataset.precoPublico);
+
+        const subtotal = price * qty;
+        priceEl.textContent = 'R$ ' + price.toFixed(2).replace('.', ',');
+        subEl.textContent = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
+        return subtotal;
+    }
+
+    function calcTotal() {
+        let total = 0;
+        document.querySelectorAll('.item-row').forEach(function(row) {
+            total += calcRow(row);
+        });
+        document.getElementById('grandTotal').textContent =
+            'R$ ' + total.toFixed(2).replace('.', ',');
+    }
+
+    function attachEvents(row) {
+        row.querySelector('.categoria-select').addEventListener('change', calcTotal);
+        row.querySelector('.setor-select').addEventListener('change', calcTotal);
+        row.querySelector('.quantidade').addEventListener('input', calcTotal);
+        row.querySelector('.remove-row').addEventListener('click', function() {
+            if (document.querySelectorAll('.item-row').length > 1) {
+                row.remove();
+                calcTotal();
+            }
+        });
+    }
+
+    document.querySelectorAll('.item-row').forEach(attachEvents);
+
+    document.getElementById('addRow').addEventListener('click', function() {
+        const first = document.querySelector('.item-row');
+        const clone = first.cloneNode(true);
+        clone.querySelectorAll('input, select').forEach(function(el) {
+            if (el.type !== 'hidden') el.value = '';
+        });
+        clone.querySelector('.quantidade').value = '1';
+        clone.querySelector('.unit-price').textContent = '—';
+        clone.querySelector('.subtotal').textContent = '—';
+        table.appendChild(clone);
+        attachEvents(clone);
+    });
+
+    calcTotal();
+});
+</script>
+{% endblock %}

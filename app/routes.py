@@ -128,3 +128,14 @@ def excluir(id):
 def detalhe(id):
     registro = Colecao.query.get_or_404(id)
     return render_template("detalhe.html", registro=registro)
+
+
+@main.route("/servicos", methods=["GET", "POST"])
+def servicos():
+    categorias = [
+        {"id": 1, "nome": "Category 1 — Basic Strains", "preco_publico": 200, "preco_privado": 400},
+        {"id": 2, "nome": "Category 2 — Standard Strains", "preco_publico": 300, "preco_privado": 600},
+        {"id": 3, "nome": "Category 3 — Specialized Strains", "preco_publico": 500, "preco_privado": 1000},
+        {"id": 4, "nome": "Category 4 — Premium Strains", "preco_publico": 1050, "preco_privado": 2100},
+    ]
+    return render_template("servicos.html", categorias=categorias)

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Collection{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Microorganism Collection</h2>
+    <a href="{{ url_for('main.novo') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> New Record</a>
+</div>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-auto flex-grow-1">
+        <input type="text" name="search" class="form-control" placeholder="Search by code, genus, species, type or responsible..." value="{{ search }}">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i> Search</button>
+        {% if search %}
+        <a href="{{ url_for('main.listar') }}" class="btn btn-outline-danger"><i class="bi bi-x-circle"></i> Clear</a>
+        {% endif %}
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Code</th>
+                <th>Type</th>
+                <th>Genus</th>
+                <th>Species</th>
+                <th>Strain</th>
+                <th>Responsible</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in registros %}
+            <tr>
+                <td><a href="{{ url_for('main.detalhe', id=r.id) }}">{{ r.codigo_acesso }}</a></td>
+                <td>{{ r.tipo }}</td>
+                <td><em>{{ r.genero }}</em></td>
+                <td><em>{{ r.especie }}</em></td>
+                <td>{{ r.cepa_strain or '—' }}</td>
+                <td>{{ r.responsavel or '—' }}</td>
+                <td>
+                    <a href="{{ url_for('main.editar', id=r.id) }}" class="btn btn-sm btn-warning" title="Edit"><i class="bi bi-pencil"></i></a>
+                    <form action="{{ url_for('main.excluir', id=r.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this record?');">
+                        <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center text-muted">No records found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pagination.pages > 1 %}
+<nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item {{ 'disabled' if not pagination.has_prev }}">
+            <a class="page-link" href="{{ url_for('main.listar', page=pagination.prev_num, search=search) if pagination.has_prev else '#' }}">&laquo;</a>
+        </li>
+        {% for p in pagination.iter_pages() %}
+            {% if p %}
+            <li class="page-item {{ 'active' if p == pagination.page }}">
+                <a class="page-link" href="{{ url_for('main.listar', page=p, search=search) }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+        {% endfor %}
+        <li class="page-item {{ 'disabled' if not pagination.has_next }}">
+            <a class="page-link" href="{{ url_for('main.listar', page=pagination.next_num, search=search) if pagination.has_next else '#' }}">&raquo;</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

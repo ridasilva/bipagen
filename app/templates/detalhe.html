@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Record {{ registro.codigo_acesso }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Record: {{ registro.codigo_acesso }}</h2>
+    <div>
+        <a href="{{ url_for('main.editar', id=registro.id) }}" class="btn btn-warning"><i class="bi bi-pencil"></i> Edit</a>
+        <a href="{{ url_for('main.listar') }}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Access Code</dt>
+            <dd class="col-sm-9">{{ registro.codigo_acesso }}</dd>
+
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9">{{ registro.tipo }}</dd>
+
+            <dt class="col-sm-3">Genus</dt>
+            <dd class="col-sm-9"><em>{{ registro.genero }}</em></dd>
+
+            <dt class="col-sm-3">Species</dt>
+            <dd class="col-sm-9"><em>{{ registro.especie }}</em></dd>
+
+            <dt class="col-sm-3">Strain</dt>
+            <dd class="col-sm-9">{{ registro.cepa_strain or '—' }}</dd>
+
+            <dt class="col-sm-3">Isolation Source</dt>
+            <dd class="col-sm-9">{{ registro.origem_isolamento or '—' }}</dd>
+
+            <dt class="col-sm-3">Collection Site</dt>
+            <dd class="col-sm-9">{{ registro.local_coleta or '—' }}</dd>
+
+            <dt class="col-sm-3">Isolation Date</dt>
+            <dd class="col-sm-9">{{ registro.data_isolamento or '—' }}</dd>
+
+            <dt class="col-sm-3">Culture Medium</dt>
+            <dd class="col-sm-9">{{ registro.meio_cultivo or '—' }}</dd>
+
+            <dt class="col-sm-3">Preservation Method</dt>
+            <dd class="col-sm-9">{{ registro.metodo_preservacao or '—' }}</dd>
+
+            <dt class="col-sm-3">Storage Location</dt>
+            <dd class="col-sm-9">{{ registro.local_armazenamento or '—' }}</dd>
+
+            <dt class="col-sm-3">Responsible</dt>
+            <dd class="col-sm-9">{{ registro.responsavel or '—' }}</dd>
+
+            <dt class="col-sm-3">Registration Date</dt>
+            <dd class="col-sm-9">{{ registro.data_cadastro or '—' }}</dd>
+
+            <dt class="col-sm-3">Observations</dt>
+            <dd class="col-sm-9">{{ registro.observacoes or '—' }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if registro else 'New' }} Record{% endblock %}
+{% block content %}
+<h2>{{ 'Edit' if registro else 'New' }} Microorganism Record</h2>
+<hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4">
+        <label class="form-label">Access Code *</label>
+        <input type="text" name="codigo_acesso" class="form-control" required value="{{ registro.codigo_acesso if registro else '' }}">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Type *</label>
+        <select name="tipo" class="form-select" required>
+            <option value="">Select...</option>
+            {% for t in ['Fungo', 'Bactéria', 'Levedura', 'Vírus'] %}
+            <option value="{{ t }}" {{ 'selected' if registro and registro.tipo == t else '' }}>{{ t }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Genus *</label>
+        <input type="text" name="genero" class="form-control" required value="{{ registro.genero if registro else '' }}">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Species *</label>
+        <input type="text" name="especie" class="form-control" required value="{{ registro.especie if registro else '' }}">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Strain</label>
+        <input type="text" name="cepa_strain" class="form-control" value="{{ registro.cepa_strain if registro else '' }}">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Isolation Source</label>
+        <input type="text" name="origem_isolamento" class="form-control" value="{{ registro.origem_isolamento if registro else '' }}">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Collection Site</label>
+        <input type="text" name="local_coleta" class="form-control" value="{{ registro.local_coleta if registro else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Isolation Date</label>
+        <input type="date" name="data_isolamento" class="form-control" value="{{ registro.data_isolamento if registro else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Culture Medium</label>
+        <input type="text" name="meio_cultivo" class="form-control" value="{{ registro.meio_cultivo if registro else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Preservation Method</label>
+        <input type="text" name="metodo_preservacao" class="form-control" value="{{ registro.metodo_preservacao if registro else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Storage Location</label>
+        <input type="text" name="local_armazenamento" class="form-control" value="{{ registro.local_armazenamento if registro else '' }}">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Responsible</label>
+        <input type="text" name="responsavel" class="form-control" value="{{ registro.responsavel if registro else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Registration Date</label>
+        <input type="date" name="data_cadastro" class="form-control" value="{{ registro.data_cadastro if registro else '' }}">
+    </div>
+    <div class="col-12">
+        <label class="form-label">Observations</label>
+        <textarea name="observacoes" class="form-control" rows="3">{{ registro.observacoes if registro else '' }}</textarea>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Save</button>
+        <a href="{{ url_for('main.listar') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

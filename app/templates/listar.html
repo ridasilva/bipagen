@@ -3,14 +3,22 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Microorganism Collection</h2>
-    {% if current_user and current_user.can_edit() %}
-    <a href="{{ url_for('main.novo') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> New Record</a>
-    {% endif %}
+    <div>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#scanModal">
+            <i class="bi bi-camera"></i> Scan QR
+        </button>
+        {% if current_user and current_user.is_admin %}
+        <a href="{{ url_for('main.pdf') }}" class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf"></i> Download QR PDF</a>
+        {% endif %}
+        {% if current_user and current_user.can_edit() %}
+        <a href="{{ url_for('main.novo') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> New Record</a>
+        {% endif %}
+    </div>
 </div>
 
 <form method="GET" class="row g-2 mb-3">
     <div class="col-auto flex-grow-1">
-        <input type="text" name="search" class="form-control" placeholder="Search by code, genus, species, type or responsible..." value="{{ search }}">
+        <input type="text" name="search" id="search-input" class="form-control" placeholder="Search by code, genus, species, type or responsible..." value="{{ search }}">
     </div>
     <div class="col-auto">
         <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i> Search</button>
@@ -25,6 +33,7 @@
         <thead class="table-dark">
             <tr>
                 <th>Code</th>
+                <th>QR</th>
                 <th>Type</th>
                 <th>Genus</th>
                 <th>Species</th>
@@ -38,6 +47,11 @@
             {% for r in registros %}
             <tr>
                 <td><a href="{{ url_for('main.detalhe', id=r.id) }}">{{ r.codigo_acesso }}</a></td>
+                <td>
+                    <a href="{{ url_for('main.detalhe', id=r.id) }}" title="{{ r.codigo_acesso }}">
+                        <img src="{{ url_for('static', filename='qr_codes/' ~ r.codigo_acesso ~ '.png') }}" alt="QR" width="40" height="40" class="img-thumbnail">
+                    </a>
+                </td>
                 <td>{{ r.tipo }}</td>
                 <td><em>{{ r.genero }}</em></td>
                 <td><em>{{ r.especie }}</em></td>
@@ -62,7 +76,7 @@
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="8" class="text-center text-muted">No records found.</td></tr>
+            <tr><td colspan="9" class="text-center text-muted">No records found.</td></tr>
             {% endfor %}
         </tbody>
     </table>
@@ -89,4 +103,151 @@
     </ul>
 </nav>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<div class="modal fade" id="scanModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-qr-code-scan"></i> Scan QR Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="small text-muted">Point the camera at a collection QR code to search by its code.</p>
+                <div id="scan-error" class="alert alert-danger py-2" style="display:none;"></div>
+                <div class="text-center">
+                    <video id="qr-video" playsinline muted style="width:100%; max-height:300px; object-fit:cover; border-radius:.375rem; background:#000;"></video>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+<script>
+    let scanStream = null;
+    let scanCanvas = null;
+    let rafId = null;
+    let scanActive = false;
+
+    function extractCode(decodedText) {
+        try {
+            const data = JSON.parse(decodedText);
+            if (data.codigo_acesso) return data.codigo_acesso;
+        } catch (e) {}
+        return decodedText.trim();
+    }
+
+    function showScanError(msg) {
+        const err = document.getElementById("scan-error");
+        err.textContent = msg;
+        err.style.display = "";
+    }
+
+    function hideScanError() {
+        document.getElementById("scan-error").style.display = "none";
+    }
+
+    function requestCamera() {
+        const hasMediaDevices = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+        if (!hasMediaDevices) {
+            showScanError("This browser does not support camera access.");
+            return Promise.reject(null);
+        }
+        return navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+            audio: false
+        });
+    }
+
+    function handleCameraError(e) {
+        if (!e) return;
+        let msg;
+        if (e.name === "NotAllowedError") {
+            msg = "Camera permission was denied. Allow camera access in your browser and try again.";
+        } else if (e.name === "NotFoundError" || e.name === "OverconstrainedError") {
+            msg = "No camera was found on this device.";
+        } else if (e.name === "NotReadableError") {
+            msg = "The camera is being used by another application. Close it and try again.";
+        } else if (e.name === "SecurityError" || e.name === "TypeError") {
+            msg = "Camera requires a secure connection (HTTPS) or localhost.";
+        } else {
+            msg = "Unable to start the camera: " + (e.message || e.name || "unknown error");
+        }
+        showScanError(msg);
+    }
+
+    function tick(canvas, video) {
+        if (!scanActive) return;
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(img.data, img.width, img.height, { inversionAttempts: "dontInvert" });
+            if (code && code.data) {
+                const target = extractCode(code.data);
+                stopScanner();
+                window.location.href = "{{ url_for('main.listar') }}?search=" + encodeURIComponent(target);
+                return;
+            }
+        }
+        rafId = requestAnimationFrame(() => tick(canvas, video));
+    }
+
+    function startScanner() {
+        hideScanError();
+        const video = document.getElementById("qr-video");
+        const canvas = document.createElement("canvas");
+        canvas.style.display = "none";
+        document.body.appendChild(canvas);
+        scanCanvas = canvas;
+
+        if (typeof jsQR === "undefined") {
+            showScanError("QR scanner library failed to load. Check your internet connection.");
+            return;
+        }
+        if (!window.isSecureContext) {
+            showScanError("Camera requires a secure connection (HTTPS). Open the app via https:// or localhost.");
+            return;
+        }
+
+        requestCamera()
+            .then((stream) => {
+                scanStream = stream;
+                scanActive = true;
+                video.srcObject = stream;
+                video.play().catch(() => {});
+                video.onloadedmetadata = () => { rafId = requestAnimationFrame(() => tick(canvas, video)); };
+            })
+            .catch(handleCameraError)
+            .finally(() => {});
+    }
+
+    function stopScanner() {
+        scanActive = false;
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = null;
+        const video = document.getElementById("qr-video");
+        if (video) {
+            video.onloadedmetadata = null;
+            video.srcObject = null;
+        }
+        if (scanCanvas) {
+            scanCanvas.remove();
+            scanCanvas = null;
+        }
+        if (scanStream) {
+            scanStream.getTracks().forEach((t) => t.stop());
+            scanStream = null;
+        }
+    }
+
+    document.getElementById("scanModal").addEventListener("shown.bs.modal", startScanner);
+    document.getElementById("scanModal").addEventListener("hidden.bs.modal", stopScanner);
+</script>
 {% endblock %}

@@ -1,7 +1,10 @@
 import os
 import sys
+from dotenv import load_dotenv
 from flask import Flask
 from app.models import db, Usuario, ROLE_ADMIN, Colecao, STATUS_PUBLIC
+
+load_dotenv()
 
 app = Flask(__name__,
             template_folder=os.path.join(os.path.dirname(__file__), "app", "templates"))
@@ -57,6 +60,8 @@ with app.app_context():
     db.create_all()
     migrate_schema()
     create_admin()
+    from app.qr_utils import ensure_qr_dir
+    ensure_qr_dir()
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5002)

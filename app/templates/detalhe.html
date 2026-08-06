@@ -16,6 +16,16 @@
     </div>
 </div>
 
+<div class="card shadow-sm mb-3">
+    <div class="card-body text-center">
+        <h5 class="card-title">QR Code</h5>
+        <a href="{{ url_for('main.detalhe', id=registro.id) }}">
+            <img src="{{ url_for('static', filename='qr_codes/' ~ registro.codigo_acesso ~ '.png') }}" alt="QR {{ registro.codigo_acesso }}" width="180" height="180" class="img-thumbnail">
+        </a>
+        <p class="text-muted small mt-2 mb-0">Scans to access code <strong>{{ registro.codigo_acesso }}</strong></p>
+    </div>
+</div>
+
 <div class="card shadow-sm">
     <div class="card-body">
         <dl class="row mb-0">

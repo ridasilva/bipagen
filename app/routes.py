@@ -8,6 +8,7 @@ from flask import (
     flash,
     session,
     abort,
+    Response,
 )
 from app.models import (
     db,
@@ -20,6 +21,7 @@ from app.models import (
     STATUS_PRIVATE,
 )
 from datetime import datetime
+from app.qr_utils import generate_qr, generate_qr_pdf
 
 main = Blueprint("main", __name__)
 
@@ -242,6 +244,7 @@ def novo():
             )
             db.session.add(registro)
             db.session.commit()
+            generate_qr(registro)
             flash("Record added successfully!", "success")
             return redirect(url_for("main.listar"))
         except Exception as e:
@@ -285,6 +288,7 @@ def editar(id):
             if status in (STATUS_PUBLIC, STATUS_PRIVATE):
                 registro.status = status
             db.session.commit()
+            generate_qr(registro)
             flash("Record updated successfully!", "success")
             return redirect(url_for("main.listar"))
         except Exception as e:
@@ -305,6 +309,18 @@ def excluir(id):
         db.session.rollback()
         flash(f"Error: {e}", "danger")
     return redirect(url_for("main.listar"))
+
+
+@main.route("/colecao/pdf")
+@role_required(ROLE_ADMIN)
+def pdf():
+    registros = Colecao.query.order_by(Colecao.id.asc()).all()
+    pdf_buffer = generate_qr_pdf(registros)
+    return Response(
+        pdf_buffer.getvalue(),
+        mimetype="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=bipagen_qr_codes.pdf"},
+    )
 
 
 @main.route("/colecao/<int:id>")

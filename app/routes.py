@@ -340,4 +340,90 @@ def servicos():
         {"id": 3, "nome": "Category 3 — Specialized Strains", "preco_publico": 500, "preco_privado": 1000},
         {"id": 4, "nome": "Category 4 — Premium Strains", "preco_publico": 1050, "preco_privado": 2100},
     ]
+    if request.method == "POST":
+        ok, message = submit_service_request(categorias)
+        flash(message, "success" if ok else "danger")
+        return redirect(url_for("main.servicos"))
     return render_template("servicos.html", categorias=categorias)
+
+
+def submit_service_request(categorias):
+    from app.mailer import send_email
+
+    nome = request.form.get("nome", "").strip()
+    instituicao = request.form.get("instituicao", "").strip()
+    email_req = request.form.get("email", "").strip()
+    telefone = request.form.get("telefone", "").strip()
+    observacoes = request.form.get("observacoes", "").strip()
+    if not nome or not instituicao or not email_req:
+        return False, "Name, institution and email are required."
+
+    cat_map = {c["id"]: c for c in categorias}
+    items = []
+    total = 0
+    for cid, setor, qty in zip(
+        request.form.getlist("categoria"),
+        request.form.getlist("setor"),
+        request.form.getlist("quantidade"),
+    ):
+        cat = cat_map.get(int(cid)) if cid else None
+        qty = int(qty) if qty else 0
+        if not cat or not setor or qty < 1:
+            continue
+        preco = cat["preco_privado"] if setor == "privado" else cat["preco_publico"]
+        subtotal = preco * qty
+        total += subtotal
+        items.append(
+            {
+                "nome": cat["nome"],
+                "setor": "Private Sector" if setor == "privado" else "Public University",
+                "preco": preco,
+                "quantidade": qty,
+                "subtotal": subtotal,
+            }
+        )
+
+    if not items:
+        return False, "Add at least one valid requested strain."
+
+    def brl(v):
+        return f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    rows = "\n".join(
+        "<tr>"
+        f"<td>{i['nome']}</td>"
+        f"<td>{i['setor']}</td>"
+        f"<td>{brl(i['preco'])}</td>"
+        f"<td>{i['quantidade']}</td>"
+        f"<td>{brl(i['subtotal'])}</td>"
+        "</tr>"
+        for i in items
+    )
+    subject = f"BIPAGEN Service Request — {nome}"
+    html = f"""
+    <h2>BIPAGEN Service Request</h2>
+    <table cellpadding="6" style="border-collapse:collapse">
+      <thead><tr style="border-bottom:2px solid #000">
+        <th align="left">Category</th><th align="left">Sector</th>
+        <th align="right">Unit Price</th><th align="right">Qty</th><th align="right">Subtotal</th>
+      </tr></thead>
+      <tbody>{rows}</tbody>
+    </table>
+    <p><strong>Total: {brl(total)}</strong></p>
+    <hr>
+    <p><strong>Requester:</strong> {nome}</p>
+    <p><strong>Institution:</strong> {instituicao}</p>
+    <p><strong>Email:</strong> {email_req}</p>
+    <p><strong>Phone:</strong> {telefone or '—'}</p>
+    <p><strong>Notes:</strong> {observacoes or '—'}</p>
+    """
+    text = (
+        "BIPAGEN Service Request\n"
+        "-----------------------\n"
+        + "\n".join(
+            f"- {i['nome']} | {i['setor']} | {brl(i['preco'])} x {i['quantidade']} = {brl(i['subtotal'])}"
+            for i in items
+        )
+        + f"\nTotal: {brl(total)}\n\n"
+        f"Requester: {nome}\nInstitution: {instituicao}\nEmail: {email_req}\nPhone: {telefone or '—'}\nNotes: {observacoes or '—'}"
+    )
+    return send_email(subject, html, text_body=text)

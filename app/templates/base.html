@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ get_locale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIPAGEN - {% block title %}Home{% endblock %}</title>
+    <title>BIPAGEN - {% block title %}{{ _('Home') }}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
@@ -16,27 +16,38 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.listar') }}">Collection</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.listar') }}">{{ _('Collection') }}</a></li>
                     {% if current_user and current_user.can_edit() %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.novo') }}">New Record</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.novo') }}">{{ _('New Record') }}</a></li>
                     {% endif %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.servicos') }}">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.servicos') }}">{{ _('Services') }}</a></li>
                     {% if current_user and current_user.is_admin %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.usuarios') }}">Users</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.usuarios') }}">{{ _('Users') }}</a></li>
                     {% endif %}
                     {% if current_user %}
                     <li class="nav-item">
                         <span class="nav-link text-white-50">
                             <i class="bi bi-person-circle"></i> {{ current_user.username }}
-                            <span class="badge bg-{{ 'success' if current_user.role == 'admin' else ('info' if current_user.role == 'editor' else 'secondary') }} text-light ms-1">{{ current_user.role }}</span>
+                            <span class="badge bg-{{ 'success' if current_user.role == 'admin' else ('info' if current_user.role == 'editor' else 'secondary') }} text-light ms-1">{{ {'admin': _('Admin'), 'editor': _('Editor'), 'viewer': _('Viewer')}[current_user.role] }}</span>
                         </span>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.logout') }}">{{ _('Logout') }}</a></li>
                     {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.registro') }}">Register</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.login') }}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.registro') }}">{{ _('Register') }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.login') }}">{{ _('Login') }}</a></li>
                     {% endif %}
+                    <li class="nav-item dropdown ms-lg-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-translate"></i>
+                            {{ {'pt': 'Português', 'en': 'English', 'es': 'Español'}[get_locale()] }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item {{ 'active' if get_locale() == 'pt' }}" href="{{ url_for('main.set_language', lang='pt') }}">Português</a></li>
+                            <li><a class="dropdown-item {{ 'active' if get_locale() == 'en' }}" href="{{ url_for('main.set_language', lang='en') }}">English</a></li>
+                            <li><a class="dropdown-item {{ 'active' if get_locale() == 'es' }}" href="{{ url_for('main.set_language', lang='es') }}">Español</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -56,7 +67,7 @@
     </div>
 
     <footer class="bg-dark text-light text-center py-3 mt-5">
-        <small>&copy; 2026 BIPAGEN &mdash; Bioprospecção, Patógenos e Modelos Genéticos &mdash; FCFRP-USP</small>
+        <small>&copy; 2026 BIPAGEN &mdash; {{ _('Bioprospecting, Pathogens and Genetic Models') }} &mdash; FCFRP-USP</small>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

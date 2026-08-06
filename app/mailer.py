@@ -2,6 +2,7 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from flask_babel import gettext as _
 
 
 def get_mail_config():
@@ -20,7 +21,7 @@ def send_email(subject, html_body, text_body=None, to=None):
     cfg = get_mail_config()
     recipient = to or cfg["to"]
     if not recipient:
-        return False, "No destination email configured. Set MAIL_TO in .env."
+        return False, _("No destination email configured. Set MAIL_TO in .env.")
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = cfg["user"] or "bipagen@localhost"
@@ -39,6 +40,6 @@ def send_email(subject, html_body, text_body=None, to=None):
             server.login(cfg["user"], cfg["password"])
         server.sendmail(msg["From"], [recipient], msg.as_string())
         server.quit()
-        return True, "Service request sent by email."
+        return True, _("Service request sent by email.")
     except Exception as e:
-        return False, f"Failed to send the email: {e}"
+        return False, _("Failed to send the email: %(message)s") % {"message": e}

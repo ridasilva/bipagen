@@ -21,9 +21,17 @@ from app.models import (
     STATUS_PRIVATE,
 )
 from datetime import datetime
+from flask_babel import gettext as _
 from app.qr_utils import generate_qr, generate_qr_pdf
 
 main = Blueprint("main", __name__)
+
+
+@main.route("/lang/<lang>")
+def set_language(lang):
+    if lang in ("pt", "en", "es"):
+        session["lang"] = lang
+    return redirect(request.referrer or url_for("main.index"))
 
 
 def get_current_user():
@@ -38,7 +46,7 @@ def login_required(view):
     def wrapped(*args, **kwargs):
         user = get_current_user()
         if user is None:
-            flash("Please log in to continue.", "warning")
+            flash(_("Please log in to continue."), "warning")
             return redirect(url_for("main.login"))
         return view(*args, **kwargs)
 
@@ -51,7 +59,7 @@ def role_required(*roles):
         def wrapped(*args, **kwargs):
             user = get_current_user()
             if user is None:
-                flash("Please log in to continue.", "warning")
+                flash(_("Please log in to continue."), "warning")
                 return redirect(url_for("main.login"))
             if user.role not in roles:
                 abort(403)
@@ -64,7 +72,8 @@ def role_required(*roles):
 
 @main.app_context_processor
 def inject_user():
-    return {"current_user": get_current_user()}
+    from flask_babel import get_locale
+    return {"current_user": get_current_user(), "get_locale": get_locale}
 
 
 @main.route("/")
@@ -80,19 +89,19 @@ def registro():
         password = request.form.get("password", "")
         confirm = request.form.get("confirm", "")
         if not username or not email or not password:
-            flash("Username, email and password are required.", "danger")
+            flash(_("Username, email and password are required."), "danger")
         elif password != confirm:
-            flash("Passwords do not match.", "danger")
+            flash(_("Passwords do not match."), "danger")
         elif Usuario.query.filter_by(username=username).first():
-            flash("Username already taken.", "danger")
+            flash(_("Username already taken."), "danger")
         elif Usuario.query.filter_by(email=email).first():
-            flash("Email already registered.", "danger")
+            flash(_("Email already registered."), "danger")
         else:
             usuario = Usuario(username=username, email=email, role=ROLE_VIEWER)
             usuario.set_password(password)
             db.session.add(usuario)
             db.session.commit()
-            flash("Account created! Please log in.", "success")
+            flash(_("Account created! Please log in."), "success")
             return redirect(url_for("main.login"))
     return render_template("registro.html")
 
@@ -105,16 +114,16 @@ def login():
         usuario = Usuario.query.filter_by(username=username).first()
         if usuario and usuario.check_password(password):
             session["user_id"] = usuario.id
-            flash(f"Welcome, {usuario.username}!", "success")
+            flash(_("Welcome, %(name)s!") % {"name": usuario.username}, "success")
             return redirect(url_for("main.index"))
-        flash("Invalid username or password.", "danger")
+        flash(_("Invalid username or password."), "danger")
     return render_template("login.html")
 
 
 @main.route("/logout")
 def logout():
     session.pop("user_id", None)
-    flash("You have been logged out.", "info")
+    flash(_("You have been logged out."), "info")
     return redirect(url_for("main.index"))
 
 
@@ -133,14 +142,17 @@ def atualizar_papel(id):
         abort(404)
     novo_papel = request.form.get("role", "")
     if novo_papel not in (ROLE_ADMIN, ROLE_EDITOR, ROLE_VIEWER):
-        flash("Invalid role.", "danger")
+        flash(_("Invalid role."), "danger")
         return redirect(url_for("main.usuarios"))
     if usuario.id == get_current_user().id and novo_papel != ROLE_ADMIN:
-        flash("You cannot remove your own admin role.", "danger")
+        flash(_("You cannot remove your own admin role."), "danger")
         return redirect(url_for("main.usuarios"))
     usuario.role = novo_papel
     db.session.commit()
-    flash(f"Role of {usuario.username} updated to {novo_papel}.", "success")
+    flash(
+        _("Role of %(username)s updated to %(role)s.") % {"username": usuario.username, "role": novo_papel},
+        "success",
+    )
     return redirect(url_for("main.usuarios"))
 
 
@@ -151,12 +163,12 @@ def excluir_usuario(id):
     if not usuario:
         abort(404)
     if usuario.id == get_current_user().id:
-        flash("You cannot delete your own account.", "danger")
+        flash(_("You cannot delete your own account."), "danger")
         return redirect(url_for("main.usuarios"))
     Colecao.query.filter_by(owner_id=usuario.id).update({Colecao.owner_id: None})
     db.session.delete(usuario)
     db.session.commit()
-    flash(f"User {usuario.username} deleted.", "success")
+    flash(_("User %(username)s deleted.") % {"username": usuario.username}, "success")
     return redirect(url_for("main.usuarios"))
 
 
@@ -245,11 +257,11 @@ def novo():
             db.session.add(registro)
             db.session.commit()
             generate_qr(registro)
-            flash("Record added successfully!", "success")
+            flash(_("Record added successfully!"), "success")
             return redirect(url_for("main.listar"))
         except Exception as e:
             db.session.rollback()
-            flash(f"Error: {e}", "danger")
+            flash(_("Error: %(message)s") % {"message": e}, "danger")
     return render_template("form.html", registro=None)
 
 
@@ -289,11 +301,11 @@ def editar(id):
                 registro.status = status
             db.session.commit()
             generate_qr(registro)
-            flash("Record updated successfully!", "success")
+            flash(_("Record updated successfully!"), "success")
             return redirect(url_for("main.listar"))
         except Exception as e:
             db.session.rollback()
-            flash(f"Error: {e}", "danger")
+            flash(_("Error: %(message)s") % {"message": e}, "danger")
     return render_template("form.html", registro=registro)
 
 
@@ -304,10 +316,10 @@ def excluir(id):
     try:
         db.session.delete(registro)
         db.session.commit()
-        flash("Record deleted successfully!", "success")
+        flash(_("Record deleted successfully!"), "success")
     except Exception as e:
         db.session.rollback()
-        flash(f"Error: {e}", "danger")
+        flash(_("Error: %(message)s") % {"message": e}, "danger")
     return redirect(url_for("main.listar"))
 
 
@@ -335,10 +347,10 @@ def detalhe(id):
 @main.route("/servicos", methods=["GET", "POST"])
 def servicos():
     categorias = [
-        {"id": 1, "nome": "Category 1 — Basic Strains", "preco_publico": 200, "preco_privado": 400},
-        {"id": 2, "nome": "Category 2 — Standard Strains", "preco_publico": 300, "preco_privado": 600},
-        {"id": 3, "nome": "Category 3 — Specialized Strains", "preco_publico": 500, "preco_privado": 1000},
-        {"id": 4, "nome": "Category 4 — Premium Strains", "preco_publico": 1050, "preco_privado": 2100},
+        {"id": 1, "nome": _("Category 1 — Basic Strains"), "preco_publico": 200, "preco_privado": 400},
+        {"id": 2, "nome": _("Category 2 — Standard Strains"), "preco_publico": 300, "preco_privado": 600},
+        {"id": 3, "nome": _("Category 3 — Specialized Strains"), "preco_publico": 500, "preco_privado": 1000},
+        {"id": 4, "nome": _("Category 4 — Premium Strains"), "preco_publico": 1050, "preco_privado": 2100},
     ]
     if request.method == "POST":
         ok, message = submit_service_request(categorias)
@@ -356,7 +368,7 @@ def submit_service_request(categorias):
     telefone = request.form.get("telefone", "").strip()
     observacoes = request.form.get("observacoes", "").strip()
     if not nome or not instituicao or not email_req:
-        return False, "Name, institution and email are required."
+        return False, _("Name, institution and email are required.")
 
     cat_map = {c["id"]: c for c in categorias}
     items = []
@@ -376,7 +388,7 @@ def submit_service_request(categorias):
         items.append(
             {
                 "nome": cat["nome"],
-                "setor": "Private Sector" if setor == "privado" else "Public University",
+                "setor": _("Private Sector") if setor == "privado" else _("Public University"),
                 "preco": preco,
                 "quantidade": qty,
                 "subtotal": subtotal,
@@ -384,7 +396,7 @@ def submit_service_request(categorias):
         )
 
     if not items:
-        return False, "Add at least one valid requested strain."
+        return False, _("Add at least one valid requested strain.")
 
     def brl(v):
         return f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
@@ -398,32 +410,32 @@ def submit_service_request(categorias):
         "</tr>"
         for i in items
     )
-    subject = f"BIPAGEN Service Request — {nome}"
+    subject = _("BIPAGEN Service Request — %(name)s") % {"name": nome}
     html = f"""
-    <h2>BIPAGEN Service Request</h2>
+    <h2>{_("BIPAGEN Service Request")}</h2>
     <table cellpadding="6" style="border-collapse:collapse">
       <thead><tr style="border-bottom:2px solid #000">
-        <th align="left">Category</th><th align="left">Sector</th>
-        <th align="right">Unit Price</th><th align="right">Qty</th><th align="right">Subtotal</th>
+        <th align="left">{_("Category")}</th><th align="left">{_("Sector")}</th>
+        <th align="right">{_("Unit Price")}</th><th align="right">{_("Qty")}</th><th align="right">{_("Subtotal")}</th>
       </tr></thead>
       <tbody>{rows}</tbody>
     </table>
-    <p><strong>Total: {brl(total)}</strong></p>
+    <p><strong>{_("Total")}: {brl(total)}</strong></p>
     <hr>
-    <p><strong>Requester:</strong> {nome}</p>
-    <p><strong>Institution:</strong> {instituicao}</p>
-    <p><strong>Email:</strong> {email_req}</p>
-    <p><strong>Phone:</strong> {telefone or '—'}</p>
-    <p><strong>Notes:</strong> {observacoes or '—'}</p>
+    <p><strong>{_("Requester")}:</strong> {nome}</p>
+    <p><strong>{_("Institution")}:</strong> {instituicao}</p>
+    <p><strong>{_("Email")}:</strong> {email_req}</p>
+    <p><strong>{_("Phone")}:</strong> {telefone or '—'}</p>
+    <p><strong>{_("Notes")}:</strong> {observacoes or '—'}</p>
     """
     text = (
-        "BIPAGEN Service Request\n"
-        "-----------------------\n"
+        _("BIPAGEN Service Request") + "\n"
+        + "-----------------------\n"
         + "\n".join(
             f"- {i['nome']} | {i['setor']} | {brl(i['preco'])} x {i['quantidade']} = {brl(i['subtotal'])}"
             for i in items
         )
-        + f"\nTotal: {brl(total)}\n\n"
-        f"Requester: {nome}\nInstitution: {instituicao}\nEmail: {email_req}\nPhone: {telefone or '—'}\nNotes: {observacoes or '—'}"
+        + f"\n{_('Total')}: {brl(total)}\n\n"
+        + f"{_('Requester')}: {nome}\n{_('Institution')}: {instituicao}\n{_('Email')}: {email_req}\n{_('Phone')}: {telefone or '—'}\n{_('Notes')}: {observacoes or '—'}"
     )
     return send_email(subject, html, text_body=text)

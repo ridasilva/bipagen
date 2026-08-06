@@ -1,7 +1,8 @@
 import os
 import sys
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, request, session
+from flask_babel import Babel
 from app.models import db, Usuario, ROLE_ADMIN, Colecao, STATUS_PUBLIC
 
 load_dotenv()
@@ -13,6 +14,20 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
     "SQLALCHEMY_DATABASE_URI", "sqlite:///bipagen.db"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["BABEL_DEFAULT_LOCALE"] = "en"
+app.config["BABEL_SUPPORTED_LOCALES"] = ["pt", "en", "es"]
+
+babel = Babel()
+
+
+def get_locale():
+    lang = session.get("lang")
+    if lang in app.config["BABEL_SUPPORTED_LOCALES"]:
+        return lang
+    return request.accept_languages.best_match(app.config["BABEL_SUPPORTED_LOCALES"])
+
+
+babel.init_app(app, locale_selector=get_locale)
 
 db.init_app(app)
 

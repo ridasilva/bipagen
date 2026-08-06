@@ -1,0 +1,954 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-08-06 13:10-0300\n"
+"PO-Revision-Date: 2026-08-06 13:14-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: /home/rsilva/Documents/bipagen/app/mailer.py:24
+msgid "No destination email configured. Set MAIL_TO in .env."
+msgstr "No se ha configurado un correo de destino. Defina MAIL_TO en .env."
+
+#: /home/rsilva/Documents/bipagen/app/mailer.py:43
+msgid "Service request sent by email."
+msgstr "Solicitud de servicio enviada por correo."
+
+#: /home/rsilva/Documents/bipagen/app/mailer.py:45
+#, python-format
+msgid "Failed to send the email: %(message)s"
+msgstr "Error al enviar el correo: %(message)s"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:49
+#: /home/rsilva/Documents/bipagen/app/routes.py:62
+msgid "Please log in to continue."
+msgstr "Por favor, inicie sesión para continuar."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:92
+msgid "Username, email and password are required."
+msgstr "El nombre de usuario, el correo y la contraseña son obligatorios."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:94
+msgid "Passwords do not match."
+msgstr "Las contraseñas no coinciden."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:96
+msgid "Username already taken."
+msgstr "El nombre de usuario ya está en uso."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:98
+msgid "Email already registered."
+msgstr "El correo ya está registrado."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:104
+msgid "Account created! Please log in."
+msgstr "¡Cuenta creada! Por favor, inicie sesión."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:117
+#, python-format
+msgid "Welcome, %(name)s!"
+msgstr "¡Bienvenido(a), %(name)s!"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:119
+msgid "Invalid username or password."
+msgstr "Nombre de usuario o contraseña inválidos."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:126
+msgid "You have been logged out."
+msgstr "Has cerrado sesión."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:145
+msgid "Invalid role."
+msgstr "Rol inválido."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:148
+msgid "You cannot remove your own admin role."
+msgstr "No puedes eliminar tu propio rol de administrador."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:153
+#, python-format
+msgid "Role of %(username)s updated to %(role)s."
+msgstr "Rol de %(username)s actualizado a %(role)s."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:166
+msgid "You cannot delete your own account."
+msgstr "No puedes eliminar tu propia cuenta."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:171
+#, python-format
+msgid "User %(username)s deleted."
+msgstr "Usuario %(username)s eliminado."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:260
+msgid "Record added successfully!"
+msgstr "¡Registro añadido con éxito!"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:264
+#: /home/rsilva/Documents/bipagen/app/routes.py:308
+#: /home/rsilva/Documents/bipagen/app/routes.py:322
+#, python-format
+msgid "Error: %(message)s"
+msgstr "Error: %(message)s"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:304
+msgid "Record updated successfully!"
+msgstr "¡Registro actualizado con éxito!"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:319
+msgid "Record deleted successfully!"
+msgstr "¡Registro eliminado con éxito!"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:350
+msgid "Category 1 — Basic Strains"
+msgstr "Categoría 1 — Cepas Básicas"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:351
+msgid "Category 2 — Standard Strains"
+msgstr "Categoría 2 — Cepas Estándar"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:352
+msgid "Category 3 — Specialized Strains"
+msgstr "Categoría 3 — Cepas Especializadas"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:353
+msgid "Category 4 — Premium Strains"
+msgstr "Categoría 4 — Cepas Premium"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:371
+msgid "Name, institution and email are required."
+msgstr "El nombre, la institución y el correo son obligatorios."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:391
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:82
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:49
+msgid "Private Sector"
+msgstr "Sector Privado"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:391
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:48
+msgid "Public University"
+msgstr "Universidad Pública"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:399
+msgid "Add at least one valid requested strain."
+msgstr "Añade al menos una cepa solicitada válida."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:413
+#, python-format
+msgid "BIPAGEN Service Request — %(name)s"
+msgstr "Solicitud de Servicio BIPAGEN — %(name)s"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:415
+#: /home/rsilva/Documents/bipagen/app/routes.py:432
+msgid "BIPAGEN Service Request"
+msgstr "Solicitud de Servicio BIPAGEN"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:418
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:78
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:23
+msgid "Category"
+msgstr "Categoría"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:418
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:24
+msgid "Sector"
+msgstr "Sector"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:419
+msgid "Unit Price"
+msgstr "Precio Unitario"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:419
+msgid "Qty"
+msgstr "Cant."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:419
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:423
+#: /home/rsilva/Documents/bipagen/app/routes.py:438
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:66
+msgid "Total"
+msgstr "Total"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:425
+#: /home/rsilva/Documents/bipagen/app/routes.py:439
+msgid "Requester"
+msgstr "Solicitante"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:426
+#: /home/rsilva/Documents/bipagen/app/routes.py:439
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:88
+msgid "Institution"
+msgstr "Institución"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:427
+#: /home/rsilva/Documents/bipagen/app/routes.py:439
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:15
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:92
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:14
+msgid "Email"
+msgstr "Correo"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:428
+#: /home/rsilva/Documents/bipagen/app/routes.py:439
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:96
+msgid "Phone"
+msgstr "Teléfono"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:429
+#: /home/rsilva/Documents/bipagen/app/routes.py:439
+msgid "Notes"
+msgstr "Notas"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:19
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:2
+msgid "Home"
+msgstr "Inicio"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:20
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:2
+msgid "Collection"
+msgstr "Colección"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:22
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:14
+msgid "New Record"
+msgstr "Nuevo Registro"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:24
+msgid "Services"
+msgstr "Servicios"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:26
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:2
+msgid "Users"
+msgstr "Usuarios"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:32
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:30
+msgid "Admin"
+msgstr "Administrador"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:32
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:30
+msgid "Editor"
+msgstr "Editor"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:32
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:30
+msgid "Viewer"
+msgstr "Lector"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:35
+msgid "Logout"
+msgstr "Salir"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:37
+#: /home/rsilva/Documents/bipagen/app/templates/login.html:22
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:2
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:29
+msgid "Register"
+msgstr "Registrarse"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:38
+#: /home/rsilva/Documents/bipagen/app/templates/login.html:2
+#: /home/rsilva/Documents/bipagen/app/templates/login.html:8
+#: /home/rsilva/Documents/bipagen/app/templates/login.html:18
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:33
+msgid "Login"
+msgstr "Iniciar Sesión"
+
+#: /home/rsilva/Documents/bipagen/app/templates/base.html:70
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:8
+msgid "Bioprospecting, Pathogens and Genetic Models"
+msgstr "Bioprospección, Patógenos y Modelos Genéticos"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:2
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:5
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:2
+msgid "Record"
+msgstr "Registro"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:8
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:2
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:4
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:69
+msgid "Edit"
+msgstr "Editar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:11
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:72
+msgid "Delete this record?"
+msgstr "¿Eliminar este registro?"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:12
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:73
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:40
+msgid "Delete"
+msgstr "Eliminar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:15
+msgid "Back"
+msgstr "Volver"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:25
+msgid "Scans to access code"
+msgstr "Escanea para acceder al código"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:32
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:8
+msgid "Access Code"
+msgstr "Código de Acceso"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:35
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:12
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:37
+msgid "Type"
+msgstr "Tipo"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:38
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:21
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:38
+msgid "Genus"
+msgstr "Género"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:41
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:25
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:39
+msgid "Species"
+msgstr "Especie"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:44
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:29
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:40
+msgid "Strain"
+msgstr "Cepa"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:47
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:33
+msgid "Isolation Source"
+msgstr "Origen del Aislamiento"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:50
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:37
+msgid "Collection Site"
+msgstr "Lugar de Recolección"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:53
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:41
+msgid "Isolation Date"
+msgstr "Fecha de Aislamiento"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:56
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:45
+msgid "Culture Medium"
+msgstr "Medio de Cultivo"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:59
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:49
+msgid "Preservation Method"
+msgstr "Método de Preservación"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:62
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:53
+msgid "Storage Location"
+msgstr "Ubicación de Almacenamiento"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:65
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:57
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:41
+msgid "Responsible"
+msgstr "Responsable"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:68
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:61
+msgid "Registration Date"
+msgstr "Fecha de Registro"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:71
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:65
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:42
+msgid "Status"
+msgstr "Estado"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:74
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:68
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:62
+msgid "Private"
+msgstr "Privado"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:76
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:67
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:64
+msgid "Public"
+msgstr "Público"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:80
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:72
+msgid "Observations"
+msgstr "Observaciones"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:2
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:4
+msgid "New"
+msgstr "Nuevo"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:4
+msgid "Microorganism Record"
+msgstr "Registro de Microorganismo"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:14
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:35
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:47
+msgid "Select..."
+msgstr "Seleccionar..."
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:76
+msgid "Save"
+msgstr "Guardar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:77
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:14
+msgid "About the Project"
+msgstr "Sobre el Proyecto"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:16
+msgid ""
+"EMU Biological Collections Infrastructure: Acquisition of a Multi-User "
+"Platform for Microbiological Collections aimed at Bioprospecting, "
+"Pathogens and Genetic Models (BIPAGEN) is a project that proposes the "
+"creation of a multi-user platform for the storage, characterization, "
+"exchange, and safe use of microbiological collections encompassing "
+"microorganisms of interest in bioprospecting, clinical and veterinary "
+"pathogens, and genetic models for basic research."
+msgstr ""
+"Infraestructura de Colecciones Biológicas EMU: Adquisición de una "
+"Plataforma Multi-Usuario para Colecciones Microbiológicas orientadas a la"
+" Bioprospección, Patógenos y Modelos Genéticos (BIPAGEN) es un proyecto "
+"que propone la creación de una plataforma multi-usuario para el "
+"almacenamiento, caracterización, intercambio y uso seguro de colecciones "
+"microbiológicas que abarcan microorganismos de interés en bioprospección,"
+" patógenos clínicos y veterinarios, y modelos genéticos para "
+"investigación básica."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:19
+msgid ""
+"The platform integrates high-standard physical infrastructure for "
+"microbial preservation, digital collection management systems, and "
+"biosafety protocols, serving as a national hub for academic collaboration"
+" and technology transfer. Brazil holds one of the largest microbial "
+"biodiversities on the planet, still under-explored. Many strains with "
+"potential for antibiotics, enzymes, biopolymers, or pharmaceutical and "
+"agricultural compounds remain restricted to isolated labs without unified"
+" management or structured sharing."
+msgstr ""
+"La plataforma integra infraestructura física de alto nivel para la "
+"preservación microbiana, sistemas digitales de gestión de colecciones y "
+"protocolos de bioseguridad, actuando como un centro nacional para la "
+"colaboración académica y la transferencia de tecnología. Brasil posee una"
+" de las mayores biodiversidades microbianas del planeta, aún poco "
+"explorada. Muchas cepas con potencial para antibióticos, enzimas, "
+"biopolímeros o compuestos farmacéuticos y agrícolas permanecen "
+"restringidas a laboratorios aislados sin una gestión unificada ni "
+"intercambio estructurado."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:28
+msgid "Coordinator"
+msgstr "Coordinador"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:36
+msgid "Associated Researchers"
+msgstr "Investigadores Asociados"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:50
+msgid "Infrastructure &amp; Equipment"
+msgstr "Infraestructura &amp; Equipamiento"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:54
+msgid "Eppendorf epMotion 5075t NGS solution robot"
+msgstr "Robot Eppendorf epMotion 5075t NGS solution"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:54
+msgid "liquid handling and inoculation in 96/384-well plates"
+msgstr "manejo de líquidos e inoculación en placas de 96/384 pocillos"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:55
+msgid "Laminar flow hood"
+msgstr "Campana de flujo laminar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:55
+msgid "sterile handling of samples"
+msgstr "manipulación estéril de muestras"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:56
+msgid "Two -80°C freezers"
+msgstr "Dos congeladores a -80°C"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:56
+msgid "long-term microbial preservation"
+msgstr "preservación microbiana a largo plazo"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:61
+msgid "Liquid nitrogen tanks (-196°C)"
+msgstr "Tanques de nitrógeno líquido (-196°C)"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:61
+msgid "cryopreservation of high-value strains"
+msgstr "criopreservación de cepas de alto valor"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:62
+msgid "Lyophilizers"
+msgstr "Liofilizadores"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:62
+msgid "freeze-drying for stable, ambient-temperature storage"
+msgstr "liofilización para almacenamiento estable a temperatura ambiente"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:63
+msgid "LIMS platform"
+msgstr "Plataforma LIMS"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:63
+msgid ""
+"digital management with metadata tracking (geographic origin, molecular "
+"characterization, legal compliance)"
+msgstr ""
+"gestión digital con seguimiento de metadatos (origen geográfico, "
+"caracterización molecular, cumplimiento legal)"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:72
+msgid "Services &amp; Pricing"
+msgstr "Servicios &amp; Precios"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:73
+msgid ""
+"The BIPAGEN collection offers strains in four categories. Prices are per "
+"strain and include a basic technical datasheet."
+msgstr ""
+"La colección BIPAGEN ofrece cepas en cuatro categorías. Los precios son "
+"por cepa e incluyen una ficha técnica básica."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:79
+msgid "Description"
+msgstr "Descripción"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:80
+msgid "Examples"
+msgstr "Ejemplos"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:81
+msgid "Public Universities"
+msgstr "Universidades Públicas"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:87
+msgid "1 — Basic Strains"
+msgstr "1 — Cepas Básicas"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:88
+msgid "Common, non-pathogenic, easy to cultivate."
+msgstr "Comunes, no patógenas, fáciles de cultivar."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:89
+msgid "wild-type Saccharomyces cerevisiae"
+msgstr "Saccharomyces cerevisiae silvestre"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:94
+msgid "2 — Standard Strains"
+msgstr "2 — Cepas Estándar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:95
+msgid ""
+"Non-pathogenic bacteria, yeasts, and filamentous fungi with specific "
+"characteristics."
+msgstr ""
+"Bacterias, levaduras y hongos filamentosos no patógenos con "
+"características específicas."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:96
+msgid "non-toxigenic"
+msgstr "no toxigénico"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:101
+msgid "3 — Specialized Strains"
+msgstr "3 — Cepas Especializadas"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:102
+msgid ""
+"Biosafety Level 2 (BSL-2) pathogens, fastidious microorganisms, or "
+"strains with common vectors/plasmids."
+msgstr ""
+"Patógenos de Nivel de Bioseguridad 2 (BSL-2), microorganismos exigentes o"
+" cepas con vectores/plásmidos comunes."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:103
+msgid "plasmid"
+msgstr "plásmido"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:108
+msgid "4 — Premium Strains"
+msgstr "4 — Cepas Premium"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:109
+msgid ""
+"Patented strains, high commercial value, complex genetic constructs, or "
+"BSL-3 pathogens (with specific legal restrictions)."
+msgstr ""
+"Cepas patentadas, de alto valor comercial, con construcciones genéticas "
+"complejas o patógenos de BSL-3 (con restricciones legales específicas)."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:110
+msgid "Patented enzyme/antibody-producing strains"
+msgstr "Cepas patentadas productoras de enzimas/anticuerpos"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:110
+msgid "specific knockout strains"
+msgstr "cepas knockout específicas"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:117
+msgid "Important Notes"
+msgstr "Notas Importantes"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:119
+msgid "Documentation:"
+msgstr "Documentación:"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:119
+msgid ""
+"All prices include a basic technical datasheet. Certificate of Analysis "
+"(viability, purity, confirmatory molecular test) incurs an additional "
+"fee."
+msgstr ""
+"Todos los precios incluyen una ficha técnica básica. El Certificado de "
+"Análisis (viabilidad, pureza, prueba molecular confirmatoria) tiene un "
+"costo adicional."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:120
+msgid "Licenses:"
+msgstr "Licencias:"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:120
+msgid ""
+"Patented strains are subject to Material Transfer Agreements (MTA) and "
+"may require additional licensing fees not included in the listed price."
+msgstr ""
+"Las cepas patentadas están sujetas a Acuerdos de Transferencia de "
+"Material (MTA) y pueden requerir tarifas de licencia adicionales no "
+"incluidas en el precio indicado."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:121
+msgid "Shipping:"
+msgstr "Envío:"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:121
+msgid ""
+"Not included. Shipping costs (special packaging with dry ice or "
+"recyclable ice) are calculated separately and borne by the buyer."
+msgstr ""
+"No incluido. Los costos de envío (embalaje especial con hielo seco o "
+"hielo reciclable) se calculan por separado y los asume el comprador."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:128
+msgid "Main Goals"
+msgstr "Objetivos Principales"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:130
+msgid ""
+"Establish physical infrastructure for long-term microbial conservation "
+"(-80°C, lyophilization, cryopreservation)."
+msgstr ""
+"Establecer infraestructura física para la conservación microbiana a largo"
+" plazo (-80°C, liofilización, criopreservación)."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:131
+msgid ""
+"Create a computerized system for strain registration, traceability, and "
+"access."
+msgstr ""
+"Crear un sistema informatizado para el registro, la trazabilidad y el "
+"acceso de las cepas."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:132
+msgid "Implement biosafety protocols with BSL-1 and BSL-2 containment levels."
+msgstr ""
+"Implementar protocolos de bioseguridad con niveles de contención BSL-1 y "
+"BSL-2."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:133
+msgid ""
+"Develop a database interconnected with national and international "
+"collection networks."
+msgstr ""
+"Desarrollar una base de datos interconectada con redes nacionales e "
+"internacionales de colecciones."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:134
+msgid ""
+"Train users in safe handling and legal documentation of microbial "
+"resources."
+msgstr ""
+"Capacitar a los usuarios en la manipulación segura y la documentación "
+"legal de los recursos microbianos."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:135
+msgid ""
+"Promote open access for the scientific community and companies with a "
+"transparent usage policy."
+msgstr ""
+"Promover el acceso abierto para la comunidad científica y las empresas "
+"con una política de uso transparente."
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:142
+msgid "Registered Collections"
+msgstr "Colecciones Registradas"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:144
+msgid "Our collection is registered at:"
+msgstr "Nuestra colección está registrada en:"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:146
+msgid "and"
+msgstr "y"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:150
+msgid "Technical Team:"
+msgstr "Equipo Técnico:"
+
+#: /home/rsilva/Documents/bipagen/app/templates/index.html:150
+msgid ""
+"Dra. Marcela Savoldi (PhD in Genetics, FMRP-USP) and Livia Alfaya (MSc, "
+"FMRP-USP)."
+msgstr ""
+"Dra. Marcela Savoldi (Doctora en Genética, FMRP-USP) y Livia Alfaya "
+"(Máster, FMRP-USP)."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:5
+msgid "Microorganism Collection"
+msgstr "Colección de Microorganismos"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:8
+msgid "Scan QR"
+msgstr "Escanear QR"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:11
+msgid "Download QR PDF"
+msgstr "Descargar PDF de QR Codes"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:21
+msgid "Search by code, genus, species, type or responsible..."
+msgstr "Buscar por código, género, especie, tipo o responsable..."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:24
+msgid "Search"
+msgstr "Buscar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:26
+msgid "Clear"
+msgstr "Limpiar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:35
+msgid "Code"
+msgstr "Código"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:43
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:17
+msgid "Actions"
+msgstr "Acciones"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:79
+msgid "No records found."
+msgstr "No se encontraron registros."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:113
+msgid "Scan QR Code"
+msgstr "Escanear Código QR"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:114
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:124
+msgid "Close"
+msgstr "Cerrar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:117
+msgid "Point the camera at a collection QR code to search by its code."
+msgstr "Apunta la cámara a un código QR de la colección para buscar por su código."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:132
+msgid "This browser does not support camera access."
+msgstr "Este navegador no admite acceso a la cámara."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:133
+msgid ""
+"Camera permission was denied. Allow camera access in your browser and try"
+" again."
+msgstr ""
+"Se denegó el permiso de la cámara. Permite el acceso a la cámara en tu "
+"navegador e inténtalo de nuevo."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:134
+msgid "No camera was found on this device."
+msgstr "No se encontró ninguna cámara en este dispositivo."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:135
+msgid "The camera is being used by another application. Close it and try again."
+msgstr ""
+"La cámara está siendo usada por otra aplicación. Ciérrala e inténtalo de "
+"nuevo."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:136
+msgid "Camera requires a secure connection (HTTPS) or localhost."
+msgstr "La cámara requiere una conexión segura (HTTPS) o localhost."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:137
+msgid "QR scanner library failed to load. Check your internet connection."
+msgstr ""
+"No se pudo cargar la librería de escaneo de QR. Verifica tu conexión a "
+"internet."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:138
+msgid "Unable to start the camera:"
+msgstr "No se pudo iniciar la cámara:"
+
+#: /home/rsilva/Documents/bipagen/app/templates/login.html:11
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:11
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:13
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: /home/rsilva/Documents/bipagen/app/templates/login.html:15
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:19
+msgid "Password"
+msgstr "Contraseña"
+
+#: /home/rsilva/Documents/bipagen/app/templates/login.html:22
+msgid "Don't have an account?"
+msgstr "¿No tienes una cuenta?"
+
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:8
+msgid "Create Account"
+msgstr "Crear Cuenta"
+
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:23
+msgid "Confirm Password"
+msgstr "Confirmar Contraseña"
+
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:27
+msgid ""
+"New accounts are created with the viewer role. An administrator can later"
+" change your role."
+msgstr ""
+"Las nuevas cuentas se crean con el rol de lector. Un administrador puede "
+"cambiar tu rol más adelante."
+
+#: /home/rsilva/Documents/bipagen/app/templates/registro.html:33
+msgid "Already have an account?"
+msgstr "¿Ya tienes una cuenta?"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:2
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:6
+msgid "Service Request"
+msgstr "Solicitud de Servicio"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:11
+msgid ""
+"You should also request services through the official USP Multi-User "
+"Platform at"
+msgstr ""
+"También puedes solicitar servicios a través de la Plataforma Multi-"
+"Usuario oficial de la USP en"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:18
+msgid "Requested Strains"
+msgstr "Cepas Solicitadas"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:25
+msgid "Unit Price (R$)"
+msgstr "Precio Unitario (R$)"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:26
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:27
+msgid "Subtotal (R$)"
+msgstr "Subtotal (R$)"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:58
+msgid "Remove"
+msgstr "Quitar"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:74
+msgid "Add another strain"
+msgstr "Añadir otra cepa"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:81
+msgid "Contact Information"
+msgstr "Información de Contacto"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:84
+msgid "Full Name"
+msgstr "Nombre Completo"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:100
+msgid "Additional Notes"
+msgstr "Notas Adicionales"
+
+#: /home/rsilva/Documents/bipagen/app/templates/servicos.html:109
+msgid "Submit Request"
+msgstr "Enviar Solicitud"
+
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:5
+msgid "User Accounts"
+msgstr "Cuentas de Usuario"
+
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:15
+msgid "Role"
+msgstr "Rol"
+
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:16
+msgid "Created"
+msgstr "Creado"
+
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:33
+msgid "Update role"
+msgstr "Actualizar rol"
+
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:39
+msgid "Delete user"
+msgstr "Eliminar usuario"
+
+#: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:39
+msgid "Their records will be kept."
+msgstr "Sus registros se conservarán."
+
+#. tipo (dynamic DB value)
+msgid "Fungo"
+msgstr "Hongo"
+
+#. tipo (dynamic DB value)
+msgid "Bactéria"
+msgstr "Bacteria"
+
+#. tipo (dynamic DB value)
+msgid "Levedura"
+msgstr "Levadura"
+
+#. tipo (dynamic DB value)
+msgid "Vírus"
+msgstr "Virus"
+

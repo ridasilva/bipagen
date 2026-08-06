@@ -1,18 +1,18 @@
 {% extends "base.html" %}
-{% block title %}Record {{ registro.codigo_acesso }}{% endblock %}
+{% block title %}{{ _('Record') }} {{ registro.codigo_acesso }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Record: {{ registro.codigo_acesso }}</h2>
+    <h2>{{ _('Record') }}: {{ registro.codigo_acesso }}</h2>
     <div>
         {% if current_user and (current_user.is_admin or current_user.id == registro.owner_id) and current_user.can_edit() %}
-        <a href="{{ url_for('main.editar', id=registro.id) }}" class="btn btn-warning"><i class="bi bi-pencil"></i> Edit</a>
+        <a href="{{ url_for('main.editar', id=registro.id) }}" class="btn btn-warning"><i class="bi bi-pencil"></i> {{ _('Edit') }}</a>
         {% endif %}
         {% if current_user and current_user.is_admin %}
-        <form action="{{ url_for('main.excluir', id=registro.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this record?');">
-            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete</button>
+        <form action="{{ url_for('main.excluir', id=registro.id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ _('Delete this record?') }}');">
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> {{ _('Delete') }}</button>
         </form>
         {% endif %}
-        <a href="{{ url_for('main.listar') }}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+        <a href="{{ url_for('main.listar') }}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> {{ _('Back') }}</a>
     </div>
 </div>
 
@@ -22,62 +22,62 @@
         <a href="{{ url_for('main.detalhe', id=registro.id) }}">
             <img src="{{ url_for('static', filename='qr_codes/' ~ registro.codigo_acesso ~ '.png') }}" alt="QR {{ registro.codigo_acesso }}" width="180" height="180" class="img-thumbnail">
         </a>
-        <p class="text-muted small mt-2 mb-0">Scans to access code <strong>{{ registro.codigo_acesso }}</strong></p>
+        <p class="text-muted small mt-2 mb-0">{{ _('Scans to access code') }} <strong>{{ registro.codigo_acesso }}</strong></p>
     </div>
 </div>
 
 <div class="card shadow-sm">
     <div class="card-body">
         <dl class="row mb-0">
-            <dt class="col-sm-3">Access Code</dt>
+            <dt class="col-sm-3">{{ _('Access Code') }}</dt>
             <dd class="col-sm-9">{{ registro.codigo_acesso }}</dd>
 
-            <dt class="col-sm-3">Type</dt>
-            <dd class="col-sm-9">{{ registro.tipo }}</dd>
+            <dt class="col-sm-3">{{ _('Type') }}</dt>
+            <dd class="col-sm-9">{{ _(registro.tipo) }}</dd>
 
-            <dt class="col-sm-3">Genus</dt>
+            <dt class="col-sm-3">{{ _('Genus') }}</dt>
             <dd class="col-sm-9"><em>{{ registro.genero }}</em></dd>
 
-            <dt class="col-sm-3">Species</dt>
+            <dt class="col-sm-3">{{ _('Species') }}</dt>
             <dd class="col-sm-9"><em>{{ registro.especie }}</em></dd>
 
-            <dt class="col-sm-3">Strain</dt>
+            <dt class="col-sm-3">{{ _('Strain') }}</dt>
             <dd class="col-sm-9">{{ registro.cepa_strain or '—' }}</dd>
 
-            <dt class="col-sm-3">Isolation Source</dt>
+            <dt class="col-sm-3">{{ _('Isolation Source') }}</dt>
             <dd class="col-sm-9">{{ registro.origem_isolamento or '—' }}</dd>
 
-            <dt class="col-sm-3">Collection Site</dt>
+            <dt class="col-sm-3">{{ _('Collection Site') }}</dt>
             <dd class="col-sm-9">{{ registro.local_coleta or '—' }}</dd>
 
-            <dt class="col-sm-3">Isolation Date</dt>
+            <dt class="col-sm-3">{{ _('Isolation Date') }}</dt>
             <dd class="col-sm-9">{{ registro.data_isolamento or '—' }}</dd>
 
-            <dt class="col-sm-3">Culture Medium</dt>
+            <dt class="col-sm-3">{{ _('Culture Medium') }}</dt>
             <dd class="col-sm-9">{{ registro.meio_cultivo or '—' }}</dd>
 
-            <dt class="col-sm-3">Preservation Method</dt>
+            <dt class="col-sm-3">{{ _('Preservation Method') }}</dt>
             <dd class="col-sm-9">{{ registro.metodo_preservacao or '—' }}</dd>
 
-            <dt class="col-sm-3">Storage Location</dt>
+            <dt class="col-sm-3">{{ _('Storage Location') }}</dt>
             <dd class="col-sm-9">{{ registro.local_armazenamento or '—' }}</dd>
 
-            <dt class="col-sm-3">Responsible</dt>
+            <dt class="col-sm-3">{{ _('Responsible') }}</dt>
             <dd class="col-sm-9">{{ registro.responsavel or '—' }}</dd>
 
-            <dt class="col-sm-3">Registration Date</dt>
+            <dt class="col-sm-3">{{ _('Registration Date') }}</dt>
             <dd class="col-sm-9">{{ registro.data_cadastro or '—' }}</dd>
 
-            <dt class="col-sm-3">Status</dt>
+            <dt class="col-sm-3">{{ _('Status') }}</dt>
             <dd class="col-sm-9">
                 {% if registro.status == 'private' %}
-                <span class="badge bg-danger"><i class="bi bi-lock"></i> Private</span>
+                <span class="badge bg-danger"><i class="bi bi-lock"></i> {{ _('Private') }}</span>
                 {% else %}
-                <span class="badge bg-success"><i class="bi bi-unlock"></i> Public</span>
+                <span class="badge bg-success"><i class="bi bi-unlock"></i> {{ _('Public') }}</span>
                 {% endif %}
             </dd>
 
-            <dt class="col-sm-3">Observations</dt>
+            <dt class="col-sm-3">{{ _('Observations') }}</dt>
             <dd class="col-sm-9">{{ registro.observacoes or '—' }}</dd>
         </dl>
     </div>

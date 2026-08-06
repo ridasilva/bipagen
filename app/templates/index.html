@@ -1,31 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}{{ _('Home') }}{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-lg-10 mx-auto">
         <div class="text-center mb-5">
             <h1 class="display-4 fw-bold">BIPAGEN</h1>
-            <p class="lead text-muted">Bioprospecting, Pathogens and Genetic Models</p>
+            <p class="lead text-muted">{{ _('Bioprospecting, Pathogens and Genetic Models') }}</p>
             <hr class="my-4">
         </div>
 
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h2 class="card-title h4">About the Project</h2>
+                <h2 class="card-title h4">{{ _('About the Project') }}</h2>
                 <p class="card-text">
-                    <strong>EMU Biological Collections Infrastructure: Acquisition of a Multi-User Platform for
-                    Microbiological Collections aimed at Bioprospecting, Pathogens and Genetic Models (BIPAGEN)</strong>
-                    is a project that proposes the creation of a multi-user platform for the storage, characterization,
-                    exchange, and safe use of microbiological collections encompassing microorganisms of interest in
-                    bioprospecting, clinical and veterinary pathogens, and genetic models for basic research.
+                    {{ _('EMU Biological Collections Infrastructure: Acquisition of a Multi-User Platform for Microbiological Collections aimed at Bioprospecting, Pathogens and Genetic Models (BIPAGEN) is a project that proposes the creation of a multi-user platform for the storage, characterization, exchange, and safe use of microbiological collections encompassing microorganisms of interest in bioprospecting, clinical and veterinary pathogens, and genetic models for basic research.') }}
                 </p>
                 <p class="card-text">
-                    The platform integrates high-standard physical infrastructure for microbial preservation, digital
-                    collection management systems, and biosafety protocols, serving as a national hub for academic
-                    collaboration and technology transfer. Brazil holds one of the largest microbial biodiversities
-                    on the planet, still under-explored. Many strains with potential for antibiotics, enzymes,
-                    biopolymers, or pharmaceutical and agricultural compounds remain restricted to isolated labs
-                    without unified management or structured sharing.
+                    {{ _('The platform integrates high-standard physical infrastructure for microbial preservation, digital collection management systems, and biosafety protocols, serving as a national hub for academic collaboration and technology transfer. Brazil holds one of the largest microbial biodiversities on the planet, still under-explored. Many strains with potential for antibiotics, enzymes, biopolymers, or pharmaceutical and agricultural compounds remain restricted to isolated labs without unified management or structured sharing.') }}
                 </p>
             </div>
         </div>
@@ -34,7 +25,7 @@
             <div class="col-md-6 mb-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <h3 class="h5 card-title"><i class="bi bi-person-badge text-primary"></i> Coordinator</h3>
+                        <h3 class="h5 card-title"><i class="bi bi-person-badge text-primary"></i> {{ _('Coordinator') }}</h3>
                         <p class="card-text"><strong>Dr. Gustavo H. Goldman, PhD</strong><br>FCFRP-USP</p>
                     </div>
                 </div>
@@ -42,7 +33,7 @@
             <div class="col-md-6 mb-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <h3 class="h5 card-title"><i class="bi bi-people text-success"></i> Associated Researchers</h3>
+                        <h3 class="h5 card-title"><i class="bi bi-people text-success"></i> {{ _('Associated Researchers') }}</h3>
                         <ul class="list-unstyled mb-0">
                             <li><strong>Norberto Peporine Lopes</strong>, FCFRP-USP</li>
                             <li><strong>Mônica T. Pupo</strong>, FCFRP-USP</li>
@@ -56,20 +47,20 @@
 
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h3 class="h5 card-title"><i class="bi bi-tools text-warning"></i> Infrastructure &amp; Equipment</h3>
+                <h3 class="h5 card-title"><i class="bi bi-tools text-warning"></i> {{ _('Infrastructure &amp; Equipment') }}</h3>
                 <div class="row">
                     <div class="col-md-6">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Eppendorf epMotion 5075t NGS solution</strong> robot &mdash; liquid handling and inoculation in 96/384-well plates</li>
-                            <li class="list-group-item"><strong>Laminar flow hood</strong> &mdash; sterile handling of samples</li>
-                            <li class="list-group-item"><strong>Two &minus;80&deg;C freezers</strong> &mdash; long-term microbial preservation</li>
+                            <li class="list-group-item"><strong>{{ _('Eppendorf epMotion 5075t NGS solution robot') }}</strong> &mdash; {{ _('liquid handling and inoculation in 96/384-well plates') }}</li>
+                            <li class="list-group-item"><strong>{{ _('Laminar flow hood') }}</strong> &mdash; {{ _('sterile handling of samples') }}</li>
+                            <li class="list-group-item"><strong>{{ _('Two -80°C freezers') }}</strong> &mdash; {{ _('long-term microbial preservation') }}</li>
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Liquid nitrogen tanks (&minus;196&deg;C)</strong> &mdash; cryopreservation of high-value strains</li>
-                            <li class="list-group-item"><strong>Lyophilizers</strong> &mdash; freeze-drying for stable, ambient-temperature storage</li>
-                            <li class="list-group-item"><strong>LIMS platform</strong> &mdash; digital management with metadata tracking (geographic origin, molecular characterization, legal compliance)</li>
+                            <li class="list-group-item"><strong>{{ _('Liquid nitrogen tanks (-196°C)') }}</strong> &mdash; {{ _('cryopreservation of high-value strains') }}</li>
+                            <li class="list-group-item"><strong>{{ _('Lyophilizers') }}</strong> &mdash; {{ _('freeze-drying for stable, ambient-temperature storage') }}</li>
+                            <li class="list-group-item"><strong>{{ _('LIMS platform') }}</strong> &mdash; {{ _('digital management with metadata tracking (geographic origin, molecular characterization, legal compliance)') }}</li>
                         </ul>
                     </div>
                 </div>
@@ -78,86 +69,85 @@
 
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h3 class="h5 card-title"><i class="bi bi-currency-dollar text-success"></i> Services &amp; Pricing</h3>
-                <p class="card-text">The BIPAGEN collection offers strains in four categories. Prices are per strain and include a basic technical datasheet.</p>
+                <h3 class="h5 card-title"><i class="bi bi-currency-dollar text-success"></i> {{ _('Services &amp; Pricing') }}</h3>
+                <p class="card-text">{{ _('The BIPAGEN collection offers strains in four categories. Prices are per strain and include a basic technical datasheet.') }}</p>
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead class="table-success">
                             <tr>
-                                <th style="width:12%">Category</th>
-                                <th style="width:20%">Description</th>
-                                <th style="width:28%">Examples</th>
-                                <th style="width:20%">Public Universities</th>
-                                <th style="width:20%">Private Sector</th>
+                                <th style="width:12%">{{ _('Category') }}</th>
+                                <th style="width:20%">{{ _('Description') }}</th>
+                                <th style="width:28%">{{ _('Examples') }}</th>
+                                <th style="width:20%">{{ _('Public Universities') }}</th>
+                                <th style="width:20%">{{ _('Private Sector') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>1 &mdash; Basic Strains</strong></td>
-                                <td>Common, non-pathogenic, easy to cultivate.</td>
-                                <td><em>E. coli</em> K-12, <em>Bacillus subtilis</em> 168, wild-type <em>Saccharomyces cerevisiae</em>.</td>
+                                <td><strong>{{ _('1 — Basic Strains') }}</strong></td>
+                                <td>{{ _('Common, non-pathogenic, easy to cultivate.') }}</td>
+                                <td><em>E. coli</em> K-12, <em>Bacillus subtilis</em> 168, {{ _('wild-type Saccharomyces cerevisiae') }}.</td>
                                 <td>R$ 200,00</td>
                                 <td>R$ 400,00</td>
                             </tr>
                             <tr>
-                                <td><strong>2 &mdash; Standard Strains</strong></td>
-                                <td>Non-pathogenic bacteria, yeasts, and filamentous fungi with specific characteristics.</td>
-                                <td><em>Pseudomonas putida</em>, <em>Lactobacillus</em> spp., <em>Aspergillus niger</em> (non-toxigenic).</td>
+                                <td><strong>{{ _('2 — Standard Strains') }}</strong></td>
+                                <td>{{ _('Non-pathogenic bacteria, yeasts, and filamentous fungi with specific characteristics.') }}</td>
+                                <td><em>Pseudomonas putida</em>, <em>Lactobacillus</em> spp., <em>Aspergillus niger</em> ({{ _('non-toxigenic') }}).</td>
                                 <td>R$ 300,00</td>
                                 <td>R$ 600,00</td>
                             </tr>
                             <tr>
-                                <td><strong>3 &mdash; Specialized Strains</strong></td>
-                                <td>Biosafety Level 2 (BSL-2) pathogens, fastidious microorganisms, or strains with common vectors/plasmids.</td>
-                                <td><em>Staphylococcus aureus</em> (ATCC 25923), <em>Salmonella enterica</em>, <em>E. coli</em> BL21(DE3) + pET plasmid.</td>
+                                <td><strong>{{ _('3 — Specialized Strains') }}</strong></td>
+                                <td>{{ _('Biosafety Level 2 (BSL-2) pathogens, fastidious microorganisms, or strains with common vectors/plasmids.') }}</td>
+                                <td><em>Staphylococcus aureus</em> (ATCC 25923), <em>Salmonella enterica</em>, <em>E. coli</em> BL21(DE3) + pET {{ _('plasmid') }}.</td>
                                 <td>R$ 500,00</td>
                                 <td>R$ 1.000,00</td>
                             </tr>
                             <tr>
-                                <td><strong>4 &mdash; Premium Strains</strong></td>
-                                <td>Patented strains, high commercial value, complex genetic constructs, or BSL-3 pathogens (with specific legal restrictions).</td>
-                                <td>Patented enzyme/antibody-producing strains, <em>Mycobacterium tuberculosis</em> (BSL-3), specific knockout strains.</td>
+                                <td><strong>{{ _('4 — Premium Strains') }}</strong></td>
+                                <td>{{ _('Patented strains, high commercial value, complex genetic constructs, or BSL-3 pathogens (with specific legal restrictions).') }}</td>
+                                <td>{{ _('Patented enzyme/antibody-producing strains') }}, <em>Mycobacterium tuberculosis</em> (BSL-3), {{ _('specific knockout strains') }}.</td>
                                 <td>R$ 600,00 &ndash; R$ 1.500,00</td>
                                 <td>R$ 1.200,00 &ndash; R$ 3.000,00</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <h5 class="h6 mt-3">Important Notes</h5>
+                <h5 class="h6 mt-3">{{ _('Important Notes') }}</h5>
                 <ul class="mb-0 small">
-                    <li><strong>Documentation:</strong> All prices include a basic technical datasheet. Certificate of Analysis (viability, purity, confirmatory molecular test) incurs an additional fee.</li>
-                    <li><strong>Licenses:</strong> Patented strains are subject to Material Transfer Agreements (MTA) and may require additional licensing fees not included in the listed price.</li>
-                    <li><strong>Shipping:</strong> Not included. Shipping costs (special packaging with dry ice or recyclable ice) are calculated separately and borne by the buyer.</li>
+                    <li><strong>{{ _('Documentation:') }}</strong> {{ _('All prices include a basic technical datasheet. Certificate of Analysis (viability, purity, confirmatory molecular test) incurs an additional fee.') }}</li>
+                    <li><strong>{{ _('Licenses:') }}</strong> {{ _('Patented strains are subject to Material Transfer Agreements (MTA) and may require additional licensing fees not included in the listed price.') }}</li>
+                    <li><strong>{{ _('Shipping:') }}</strong> {{ _('Not included. Shipping costs (special packaging with dry ice or recyclable ice) are calculated separately and borne by the buyer.') }}</li>
                 </ul>
             </div>
         </div>
 
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h3 class="h5 card-title"><i class="bi bi-clipboard-data text-info"></i> Main Goals</h3>
+                <h3 class="h5 card-title"><i class="bi bi-clipboard-data text-info"></i> {{ _('Main Goals') }}</h3>
                 <ol class="mb-0">
-                    <li>Establish physical infrastructure for long-term microbial conservation (&minus;80&deg;C, lyophilization, cryopreservation).</li>
-                    <li>Create a computerized system for strain registration, traceability, and access.</li>
-                    <li>Implement biosafety protocols with BSL-1 and BSL-2 containment levels.</li>
-                    <li>Develop a database interconnected with national and international collection networks.</li>
-                    <li>Train users in safe handling and legal documentation of microbial resources.</li>
-                    <li>Promote open access for the scientific community and companies with a transparent usage policy.</li>
+                    <li>{{ _('Establish physical infrastructure for long-term microbial conservation (-80°C, lyophilization, cryopreservation).') }}</li>
+                    <li>{{ _('Create a computerized system for strain registration, traceability, and access.') }}</li>
+                    <li>{{ _('Implement biosafety protocols with BSL-1 and BSL-2 containment levels.') }}</li>
+                    <li>{{ _('Develop a database interconnected with national and international collection networks.') }}</li>
+                    <li>{{ _('Train users in safe handling and legal documentation of microbial resources.') }}</li>
+                    <li>{{ _('Promote open access for the scientific community and companies with a transparent usage policy.') }}</li>
                 </ol>
             </div>
         </div>
 
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h3 class="h5 card-title"><i class="bi bi-link-45deg text-secondary"></i> Registered Collections</h3>
+                <h3 class="h5 card-title"><i class="bi bi-link-45deg text-secondary"></i> {{ _('Registered Collections') }}</h3>
                 <p class="card-text">
-                    Our collection is registered at:
+                    {{ _('Our collection is registered at:') }}
                     <a href="https://collectory.sibbr.gov.br/collectory/public/show/co829" target="_blank">SiBBr</a>
-                    and
+                    {{ _('and') }}
                     <a href="https://specieslink.net/col/BIPAGEN/" target="_blank">SpeciesLink (CRIA)</a>.
                 </p>
                 <p class="card-text mb-0">
-                    <strong>Technical Team:</strong> Dra. Marcela Savoldi (PhD in Genetics, FMRP-USP) and
-                    Livia Alfaya (MSc, FMRP-USP).
+                    <strong>{{ _('Technical Team:') }}</strong> {{ _('Dra. Marcela Savoldi (PhD in Genetics, FMRP-USP) and Livia Alfaya (MSc, FMRP-USP).') }}
                 </p>
             </div>
         </div>

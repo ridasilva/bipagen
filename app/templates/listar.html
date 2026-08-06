@@ -1,29 +1,29 @@
 {% extends "base.html" %}
-{% block title %}Collection{% endblock %}
+{% block title %}{{ _('Collection') }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Microorganism Collection</h2>
+    <h2>{{ _('Microorganism Collection') }}</h2>
     <div>
         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#scanModal">
-            <i class="bi bi-camera"></i> Scan QR
+            <i class="bi bi-camera"></i> {{ _('Scan QR') }}
         </button>
         {% if current_user and current_user.is_admin %}
-        <a href="{{ url_for('main.pdf') }}" class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf"></i> Download QR PDF</a>
+        <a href="{{ url_for('main.pdf') }}" class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf"></i> {{ _('Download QR PDF') }}</a>
         {% endif %}
         {% if current_user and current_user.can_edit() %}
-        <a href="{{ url_for('main.novo') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> New Record</a>
+        <a href="{{ url_for('main.novo') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> {{ _('New Record') }}</a>
         {% endif %}
     </div>
 </div>
 
 <form method="GET" class="row g-2 mb-3">
     <div class="col-auto flex-grow-1">
-        <input type="text" name="search" id="search-input" class="form-control" placeholder="Search by code, genus, species, type or responsible..." value="{{ search }}">
+        <input type="text" name="search" id="search-input" class="form-control" placeholder="{{ _('Search by code, genus, species, type or responsible...') }}" value="{{ search }}">
     </div>
     <div class="col-auto">
-        <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i> Search</button>
+        <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i> {{ _('Search') }}</button>
         {% if search %}
-        <a href="{{ url_for('main.listar') }}" class="btn btn-outline-danger"><i class="bi bi-x-circle"></i> Clear</a>
+        <a href="{{ url_for('main.listar') }}" class="btn btn-outline-danger"><i class="bi bi-x-circle"></i> {{ _('Clear') }}</a>
         {% endif %}
     </div>
 </form>
@@ -32,15 +32,15 @@
     <table class="table table-striped table-hover align-middle">
         <thead class="table-dark">
             <tr>
-                <th>Code</th>
+                <th>{{ _('Code') }}</th>
                 <th>QR</th>
-                <th>Type</th>
-                <th>Genus</th>
-                <th>Species</th>
-                <th>Strain</th>
-                <th>Responsible</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>{{ _('Type') }}</th>
+                <th>{{ _('Genus') }}</th>
+                <th>{{ _('Species') }}</th>
+                <th>{{ _('Strain') }}</th>
+                <th>{{ _('Responsible') }}</th>
+                <th>{{ _('Status') }}</th>
+                <th>{{ _('Actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -52,31 +52,31 @@
                         <img src="{{ url_for('static', filename='qr_codes/' ~ r.codigo_acesso ~ '.png') }}" alt="QR" width="40" height="40" class="img-thumbnail">
                     </a>
                 </td>
-                <td>{{ r.tipo }}</td>
+                <td>{{ _(r.tipo) }}</td>
                 <td><em>{{ r.genero }}</em></td>
                 <td><em>{{ r.especie }}</em></td>
                 <td>{{ r.cepa_strain or '—' }}</td>
                 <td>{{ r.responsavel or '—' }}</td>
                 <td>
                     {% if r.status == 'private' %}
-                    <span class="badge bg-danger"><i class="bi bi-lock"></i> Private</span>
+                    <span class="badge bg-danger"><i class="bi bi-lock"></i> {{ _('Private') }}</span>
                     {% else %}
-                    <span class="badge bg-success"><i class="bi bi-unlock"></i> Public</span>
+                    <span class="badge bg-success"><i class="bi bi-unlock"></i> {{ _('Public') }}</span>
                     {% endif %}
                 </td>
                 <td>
                     {% if current_user and (current_user.is_admin or current_user.id == r.owner_id) and current_user.can_edit() %}
-                    <a href="{{ url_for('main.editar', id=r.id) }}" class="btn btn-sm btn-warning" title="Edit"><i class="bi bi-pencil"></i></a>
+                    <a href="{{ url_for('main.editar', id=r.id) }}" class="btn btn-sm btn-warning" title="{{ _('Edit') }}"><i class="bi bi-pencil"></i></a>
                     {% endif %}
                     {% if current_user and current_user.is_admin %}
-                    <form action="{{ url_for('main.excluir', id=r.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this record?');">
-                        <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                    <form action="{{ url_for('main.excluir', id=r.id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ _('Delete this record?') }}');">
+                        <button type="submit" class="btn btn-sm btn-danger" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
                     </form>
                     {% endif %}
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="9" class="text-center text-muted">No records found.</td></tr>
+            <tr><td colspan="9" class="text-center text-muted">{{ _('No records found.') }}</td></tr>
             {% endfor %}
         </tbody>
     </table>
@@ -110,24 +110,33 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-qr-code-scan"></i> Scan QR Code</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title"><i class="bi bi-qr-code-scan"></i> {{ _('Scan QR Code') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ _('Close') }}"></button>
             </div>
             <div class="modal-body">
-                <p class="small text-muted">Point the camera at a collection QR code to search by its code.</p>
+                <p class="small text-muted">{{ _('Point the camera at a collection QR code to search by its code.') }}</p>
                 <div id="scan-error" class="alert alert-danger py-2" style="display:none;"></div>
                 <div class="text-center">
                     <video id="qr-video" playsinline muted style="width:100%; max-height:300px; object-fit:cover; border-radius:.375rem; background:#000;"></video>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Close') }}</button>
             </div>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
 <script>
+    const I18N = {
+        noCameraSupport: "{{ _('This browser does not support camera access.') }}",
+        permissionDenied: "{{ _('Camera permission was denied. Allow camera access in your browser and try again.') }}",
+        noCameraFound: "{{ _('No camera was found on this device.') }}",
+        cameraInUse: "{{ _('The camera is being used by another application. Close it and try again.') }}",
+        needsHttps: "{{ _('Camera requires a secure connection (HTTPS) or localhost.') }}",
+        libraryFailed: "{{ _('QR scanner library failed to load. Check your internet connection.') }}",
+        unknownError: "{{ _('Unable to start the camera:') }} "
+    };
     let scanStream = null;
     let scanCanvas = null;
     let rafId = null;
@@ -154,7 +163,7 @@
     function requestCamera() {
         const hasMediaDevices = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
         if (!hasMediaDevices) {
-            showScanError("This browser does not support camera access.");
+            showScanError(I18N.noCameraSupport);
             return Promise.reject(null);
         }
         return navigator.mediaDevices.getUserMedia({
@@ -167,15 +176,15 @@
         if (!e) return;
         let msg;
         if (e.name === "NotAllowedError") {
-            msg = "Camera permission was denied. Allow camera access in your browser and try again.";
+            msg = I18N.permissionDenied;
         } else if (e.name === "NotFoundError" || e.name === "OverconstrainedError") {
-            msg = "No camera was found on this device.";
+            msg = I18N.noCameraFound;
         } else if (e.name === "NotReadableError") {
-            msg = "The camera is being used by another application. Close it and try again.";
+            msg = I18N.cameraInUse;
         } else if (e.name === "SecurityError" || e.name === "TypeError") {
-            msg = "Camera requires a secure connection (HTTPS) or localhost.";
+            msg = I18N.needsHttps;
         } else {
-            msg = "Unable to start the camera: " + (e.message || e.name || "unknown error");
+            msg = I18N.unknownError + (e.message || e.name);
         }
         showScanError(msg);
     }
@@ -208,11 +217,11 @@
         scanCanvas = canvas;
 
         if (typeof jsQR === "undefined") {
-            showScanError("QR scanner library failed to load. Check your internet connection.");
+            showScanError(I18N.libraryFailed);
             return;
         }
         if (!window.isSecureContext) {
-            showScanError("Camera requires a secure connection (HTTPS). Open the app via https:// or localhost.");
+            showScanError(I18N.needsHttps);
             return;
         }
 

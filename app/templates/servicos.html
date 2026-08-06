@@ -1,30 +1,30 @@
 {% extends "base.html" %}
-{% block title %}Service Request{% endblock %}
+{% block title %}{{ _('Service Request') }}{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-lg-10 mx-auto">
-        <h2>Service Request</h2>
+        <h2>{{ _('Service Request') }}</h2>
         <hr>
 
         <div class="alert alert-info">
             <i class="bi bi-info-circle"></i>
-            You should also request services through the official USP Multi-User Platform at
+            {{ _('You should also request services through the official USP Multi-User Platform at') }}
             <a href="https://uspmulti.prp.usp.br/centrais/public/43" target="_blank" class="alert-link">https://uspmulti.prp.usp.br/centrais/public/43</a>.
         </div>
 
         <form id="requestForm" action="{{ url_for('main.servicos') }}" method="POST">
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
-                    <h3 class="h5 card-title">Requested Strains</h3>
+                    <h3 class="h5 card-title">{{ _('Requested Strains') }}</h3>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="itemsTable">
                             <thead class="table-secondary">
                                 <tr>
-                                    <th style="width:35%">Category</th>
-                                    <th style="width:15%">Sector</th>
-                                    <th style="width:15%">Unit Price (R$)</th>
-                                    <th style="width:12%">Quantity</th>
-                                    <th style="width:15%">Subtotal (R$)</th>
+                                    <th style="width:35%">{{ _('Category') }}</th>
+                                    <th style="width:15%">{{ _('Sector') }}</th>
+                                    <th style="width:15%">{{ _('Unit Price (R$)') }}</th>
+                                    <th style="width:12%">{{ _('Quantity') }}</th>
+                                    <th style="width:15%">{{ _('Subtotal (R$)') }}</th>
                                     <th style="width:8%"></th>
                                 </tr>
                             </thead>
@@ -32,7 +32,7 @@
                                 <tr class="item-row">
                                     <td>
                                         <select name="categoria" class="form-select categoria-select" required>
-                                            <option value="">Select...</option>
+                                            <option value="">{{ _('Select...') }}</option>
                                             {% for c in categorias %}
                                             <option value="{{ c.id }}"
                                                 data-preco-publico="{{ c.preco_publico }}"
@@ -44,9 +44,9 @@
                                     </td>
                                     <td>
                                         <select name="setor" class="form-select setor-select" required>
-                                            <option value="">Select...</option>
-                                            <option value="publico" data-mult="1">Public University</option>
-                                            <option value="privado" data-mult="2">Private Sector</option>
+                                            <option value="">{{ _('Select...') }}</option>
+                                            <option value="publico" data-mult="1">{{ _('Public University') }}</option>
+                                            <option value="privado" data-mult="2">{{ _('Private Sector') }}</option>
                                         </select>
                                     </td>
                                     <td class="unit-price text-end">—</td>
@@ -55,7 +55,7 @@
                                     </td>
                                     <td class="subtotal text-end fw-bold">—</td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-outline-danger btn-sm remove-row" title="Remove">
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-row" title="{{ _('Remove') }}">
                                             <i class="bi bi-x-lg"></i>
                                         </button>
                                     </td>
@@ -63,7 +63,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="4" class="text-end fw-bold">Total</td>
+                                    <td colspan="4" class="text-end fw-bold">{{ _('Total') }}</td>
                                     <td class="text-end fw-bold fs-5" id="grandTotal">R$ 0,00</td>
                                     <td></td>
                                 </tr>
@@ -71,33 +71,33 @@
                         </table>
                     </div>
                     <button type="button" class="btn btn-outline-primary btn-sm" id="addRow">
-                        <i class="bi bi-plus-circle"></i> Add another strain
+                        <i class="bi bi-plus-circle"></i> {{ _('Add another strain') }}
                     </button>
                 </div>
             </div>
 
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
-                    <h3 class="h5 card-title">Contact Information</h3>
+                    <h3 class="h5 card-title">{{ _('Contact Information') }}</h3>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Full Name *</label>
+                            <label class="form-label">{{ _('Full Name') }} *</label>
                             <input type="text" name="nome" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Institution *</label>
+                            <label class="form-label">{{ _('Institution') }} *</label>
                             <input type="text" name="instituicao" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Email *</label>
+                            <label class="form-label">{{ _('Email') }} *</label>
                             <input type="email" name="email" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Phone</label>
+                            <label class="form-label">{{ _('Phone') }}</label>
                             <input type="text" name="telefone" class="form-control">
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Additional Notes</label>
+                            <label class="form-label">{{ _('Additional Notes') }}</label>
                             <textarea name="observacoes" class="form-control" rows="3"></textarea>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
 
             <div class="d-grid">
                 <button type="submit" class="btn btn-success btn-lg">
-                    <i class="bi bi-send"></i> Submit Request
+                    <i class="bi bi-send"></i> {{ _('Submit Request') }}
                 </button>
             </div>
         </form>

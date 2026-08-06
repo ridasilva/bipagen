@@ -1,36 +1,36 @@
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}{{ _('Register') }}{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-5 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-body">
-                <h2 class="card-title h4 mb-3"><i class="bi bi-person-plus"></i> Create Account</h2>
+                <h2 class="card-title h4 mb-3"><i class="bi bi-person-plus"></i> {{ _('Create Account') }}</h2>
                 <form method="POST">
                     <div class="mb-3">
-                        <label class="form-label">Username *</label>
+                        <label class="form-label">{{ _('Username') }} *</label>
                         <input type="text" name="username" class="form-control" required autofocus>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Email *</label>
+                        <label class="form-label">{{ _('Email') }} *</label>
                         <input type="email" name="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Password *</label>
+                        <label class="form-label">{{ _('Password') }} *</label>
                         <input type="password" name="password" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Confirm Password *</label>
+                        <label class="form-label">{{ _('Confirm Password') }} *</label>
                         <input type="password" name="confirm" class="form-control" required>
                     </div>
                     <div class="alert alert-secondary small py-2 mb-3">
-                        New accounts are created with the <strong>viewer</strong> role. An administrator can later change your role.
+                        {{ _('New accounts are created with the viewer role. An administrator can later change your role.') }}
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                    <button type="submit" class="btn btn-primary w-100">{{ _('Register') }}</button>
                 </form>
                 <hr>
                 <p class="mb-0 text-center small">
-                    Already have an account? <a href="{{ url_for('main.login') }}">Login</a>
+                    {{ _('Already have an account?') }} <a href="{{ url_for('main.login') }}">{{ _('Login') }}</a>
                 </p>
             </div>
         </div>

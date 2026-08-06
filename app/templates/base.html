@@ -15,11 +15,28 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('main.listar') }}">Collection</a></li>
+                    {% if current_user and current_user.can_edit() %}
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('main.novo') }}">New Record</a></li>
+                    {% endif %}
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('main.servicos') }}">Services</a></li>
+                    {% if current_user and current_user.is_admin %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.usuarios') }}">Users</a></li>
+                    {% endif %}
+                    {% if current_user %}
+                    <li class="nav-item">
+                        <span class="nav-link text-white-50">
+                            <i class="bi bi-person-circle"></i> {{ current_user.username }}
+                            <span class="badge bg-{{ 'success' if current_user.role == 'admin' else ('info' if current_user.role == 'editor' else 'secondary') }} text-light ms-1">{{ current_user.role }}</span>
+                        </span>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.registro') }}">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.login') }}">Login</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

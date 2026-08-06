@@ -3,7 +3,9 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Microorganism Collection</h2>
+    {% if current_user and current_user.can_edit() %}
     <a href="{{ url_for('main.novo') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> New Record</a>
+    {% endif %}
 </div>
 
 <form method="GET" class="row g-2 mb-3">
@@ -28,6 +30,7 @@
                 <th>Species</th>
                 <th>Strain</th>
                 <th>Responsible</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -41,14 +44,25 @@
                 <td>{{ r.cepa_strain or '—' }}</td>
                 <td>{{ r.responsavel or '—' }}</td>
                 <td>
+                    {% if r.status == 'private' %}
+                    <span class="badge bg-danger"><i class="bi bi-lock"></i> Private</span>
+                    {% else %}
+                    <span class="badge bg-success"><i class="bi bi-unlock"></i> Public</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if current_user and (current_user.is_admin or current_user.id == r.owner_id) and current_user.can_edit() %}
                     <a href="{{ url_for('main.editar', id=r.id) }}" class="btn btn-sm btn-warning" title="Edit"><i class="bi bi-pencil"></i></a>
+                    {% endif %}
+                    {% if current_user and current_user.is_admin %}
                     <form action="{{ url_for('main.excluir', id=r.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this record?');">
                         <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
                     </form>
+                    {% endif %}
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="7" class="text-center text-muted">No records found.</td></tr>
+            <tr><td colspan="8" class="text-center text-muted">No records found.</td></tr>
             {% endfor %}
         </tbody>
     </table>

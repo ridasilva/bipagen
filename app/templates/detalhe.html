@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title %}{{ _('Record') }} {{ registro.codigo_acesso }}{% endblock %}
+{% block title %}{{ _('Record') }} {{ registro.nome_cepa }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>{{ _('Record') }}: {{ registro.codigo_acesso }}</h2>
+    <h2>{{ _('Record') }}: {{ registro.nome_cepa }}</h2>
     <div>
         {% if current_user and (current_user.is_admin or current_user.id == registro.owner_id) and current_user.can_edit() %}
         <a href="{{ url_for('main.editar', id=registro.id) }}" class="btn btn-warning"><i class="bi bi-pencil"></i> {{ _('Edit') }}</a>
@@ -20,20 +20,20 @@
     <div class="card-body text-center">
         <h5 class="card-title">QR Code</h5>
         <a href="{{ url_for('main.detalhe', id=registro.id) }}">
-            <img src="{{ url_for('static', filename='qr_codes/' ~ registro.codigo_acesso ~ '.png') }}" alt="QR {{ registro.codigo_acesso }}" width="180" height="180" class="img-thumbnail">
+            <img src="{{ url_for('static', filename='qr_codes/' ~ registro.nome_cepa ~ '.png') }}" alt="QR {{ registro.nome_cepa }}" width="180" height="180" class="img-thumbnail">
         </a>
-        <p class="text-muted small mt-2 mb-0">{{ _('Scans to access code') }} <strong>{{ registro.codigo_acesso }}</strong></p>
+        <p class="text-muted small mt-2 mb-0">{{ _('Scans to open the record') }} <strong>{{ registro.nome_cepa }}</strong></p>
     </div>
 </div>
 
 <div class="card shadow-sm">
     <div class="card-body">
         <dl class="row mb-0">
-            <dt class="col-sm-3">{{ _('Access Code') }}</dt>
-            <dd class="col-sm-9">{{ registro.codigo_acesso }}</dd>
+            <dt class="col-sm-3">{{ _('Strain Name') }}</dt>
+            <dd class="col-sm-9">{{ registro.nome_cepa }}</dd>
 
             <dt class="col-sm-3">{{ _('Type') }}</dt>
-            <dd class="col-sm-9">{{ _(registro.tipo) }}</dd>
+            <dd class="col-sm-9">{{ _(registro.tipo) if registro.tipo else '—' }}</dd>
 
             <dt class="col-sm-3">{{ _('Genus') }}</dt>
             <dd class="col-sm-9"><em>{{ registro.genero }}</em></dd>
@@ -44,8 +44,8 @@
             <dt class="col-sm-3">{{ _('Strain') }}</dt>
             <dd class="col-sm-9">{{ registro.cepa_strain or '—' }}</dd>
 
-            <dt class="col-sm-3">{{ _('Isolation Source') }}</dt>
-            <dd class="col-sm-9">{{ registro.origem_isolamento or '—' }}</dd>
+            <dt class="col-sm-3">{{ _('Origin') }}</dt>
+            <dd class="col-sm-9">{{ registro.origem or '—' }}</dd>
 
             <dt class="col-sm-3">{{ _('Collection Site') }}</dt>
             <dd class="col-sm-9">{{ registro.local_coleta or '—' }}</dd>
@@ -55,6 +55,9 @@
 
             <dt class="col-sm-3">{{ _('Culture Medium') }}</dt>
             <dd class="col-sm-9">{{ registro.meio_cultivo or '—' }}</dd>
+
+            <dt class="col-sm-3">{{ _('Cultivation Temperature') }}</dt>
+            <dd class="col-sm-9">{{ registro.temperatura_cultivo or '—' }}</dd>
 
             <dt class="col-sm-3">{{ _('Preservation Method') }}</dt>
             <dd class="col-sm-9">{{ registro.metodo_preservacao or '—' }}</dd>
@@ -79,6 +82,22 @@
 
             <dt class="col-sm-3">{{ _('Observations') }}</dt>
             <dd class="col-sm-9">{{ registro.observacoes or '—' }}</dd>
+
+            <dt class="col-sm-3">{{ _('Publications') }}</dt>
+            <dd class="col-sm-9">
+                {% set pubs = registro.publicacoes_list() %}
+                {% if pubs %}
+                {% for p in pubs %}
+                {% if p.tipo == 'arquivo' %}
+                <a href="{{ url_for('static', filename='uploads/' ~ p.valor) }}" target="_blank" rel="noopener"><i class="bi bi-paperclip"></i> {{ p.display }}</a><br>
+                {% else %}
+                <a href="{{ p.valor }}" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i> {{ p.valor }}</a><br>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                —
+                {% endif %}
+            </dd>
         </dl>
     </div>
 </div>

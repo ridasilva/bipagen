@@ -53,20 +53,22 @@ class Colecao(db.Model):
     __tablename__ = "colecao_microrganismos_qr"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    codigo_acesso = db.Column(db.String(50), unique=True, nullable=False)
+    nome_cepa = db.Column(db.String(50), unique=True, nullable=False)
     tipo = db.Column(db.String(50), nullable=False)
     genero = db.Column(db.String(100), nullable=False)
     especie = db.Column(db.String(100), nullable=False)
     cepa_strain = db.Column(db.String(100))
-    origem_isolamento = db.Column(db.String(200))
+    origem = db.Column(db.String(200))
     local_coleta = db.Column(db.String(200))
     data_isolamento = db.Column(db.Date)
     meio_cultivo = db.Column(db.String(100))
+    temperatura_cultivo = db.Column(db.String(100))
     metodo_preservacao = db.Column(db.String(100))
     local_armazenamento = db.Column(db.String(200))
     responsavel = db.Column(db.String(100))
     data_cadastro = db.Column(db.Date, default=datetime.utcnow)
     observacoes = db.Column(db.Text)
+    publicacoes = db.Column(db.Text)
     status = db.Column(db.String(20), nullable=False, default=STATUS_PUBLIC)
     owner_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"))
     owner = db.relationship("Usuario", backref="registros")
@@ -74,19 +76,51 @@ class Colecao(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "codigo_acesso": self.codigo_acesso,
+            "nome_cepa": self.nome_cepa,
             "tipo": self.tipo,
             "genero": self.genero,
             "especie": self.especie,
             "cepa_strain": self.cepa_strain,
-            "origem_isolamento": self.origem_isolamento,
+            "origem": self.origem,
             "local_coleta": self.local_coleta,
             "data_isolamento": str(self.data_isolamento) if self.data_isolamento else "",
             "meio_cultivo": self.meio_cultivo,
+            "temperatura_cultivo": self.temperatura_cultivo,
             "metodo_preservacao": self.metodo_preservacao,
             "local_armazenamento": self.local_armazenamento,
             "responsavel": self.responsavel,
             "data_cadastro": str(self.data_cadastro) if self.data_cadastro else "",
             "observacoes": self.observacoes,
+            "publicacoes": self.publicacoes,
             "status": self.status,
         }
+
+    def publicacoes_list(self):
+        if not self.publicacoes:
+            return []
+        result = []
+        for line in self.publicacoes.split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith("arquivo:"):
+                val = line[len("arquivo:"):]
+                if "|" in val:
+                    disk, display = val.split("|", 1)
+                else:
+                    disk, display = val, val
+                result.append({"tipo": "arquivo", "valor": disk, "display": display})
+            else:
+                result.append({"tipo": "link", "valor": line})
+        return result
+
+    @staticmethod
+    def serialize_publicacoes(entries):
+        lines = []
+        for e in entries:
+            if e.get("tipo") == "arquivo":
+                display = e.get("display") or e["valor"]
+                lines.append(f"arquivo:{e['valor']}|{display}")
+            elif e.get("valor"):
+                lines.append(e["valor"])
+        return "\n".join(lines) if lines else None

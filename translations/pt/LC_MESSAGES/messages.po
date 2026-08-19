@@ -95,6 +95,48 @@ msgstr "Usuário %(username)s excluído."
 msgid "Record added successfully!"
 msgstr "Registro adicionado com sucesso!"
 
+#: /home/rsilva/Documents/bipagen/app/routes.py:416
+msgid "Please upload an XLSX file."
+msgstr "Envie um arquivo XLSX."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:420
+#, python-format
+msgid "Error reading the XLSX file: %(message)s"
+msgstr "Erro ao ler o arquivo XLSX: %(message)s"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:428
+msgid "The file is empty."
+msgstr "O arquivo está vazio."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:461
+#, python-format
+msgid "Row %(n)s: strain name is required"
+msgstr "Linha %(n)s: o nome da cepa é obrigatório"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:466
+#, python-format
+msgid "Row %(n)s: strain name '%(name)s' already exists"
+msgstr "Linha %(n)s: o nome da cepa '%(name)s' já existe"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:479
+#, python-format
+msgid "Row %(n)s: unknown type '%(name)s'"
+msgstr "Linha %(n)s: tipo desconhecido '%(name)s'"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:485
+msgid "Error importing: some records have duplicate strain names."
+msgstr "Erro ao importar: alguns registros têm nomes de cepa duplicados."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:490
+#, python-format
+msgid "%(count)s record(s) imported."
+msgstr "%(count)s registro(s) importado(s)."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:492
+#, python-format
+msgid "%(count)s error(s): "
+msgstr "%(count)s erro(s): "
+
 #: /home/rsilva/Documents/bipagen/app/routes.py:264
 #: /home/rsilva/Documents/bipagen/app/routes.py:308
 #: /home/rsilva/Documents/bipagen/app/routes.py:322
@@ -109,6 +151,29 @@ msgstr "Registro atualizado com sucesso!"
 #: /home/rsilva/Documents/bipagen/app/routes.py:319
 msgid "Record deleted successfully!"
 msgstr "Registro excluído com sucesso!"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:546
+msgid "No records selected."
+msgstr "Nenhum registro selecionado."
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:558
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:138
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:141
+msgid "Delete selected records?"
+msgstr "Excluir os registros selecionados?"
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:561
+#, python-format
+msgid "%(count)s record(s) deleted."
+msgstr "%(count)s registro(s) excluído(s)."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:139
+msgid "Select at least one record to edit."
+msgstr "Selecione pelo menos um registro para editar."
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:140
+msgid "Edit operates on a single record. Select only one."
+msgstr "A edição opera em um único registro. Selecione apenas um."
 
 #: /home/rsilva/Documents/bipagen/app/routes.py:350
 msgid "Category 1 — Basic Strains"
@@ -306,13 +371,14 @@ msgid "Back"
 msgstr "Voltar"
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:25
-msgid "Scans to access code"
-msgstr "Leia para acessar o código"
+msgid "Scans to open the record"
+msgstr "Leia para acessar o registro"
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:32
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:8
-msgid "Access Code"
-msgstr "Código de Acesso"
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:35
+msgid "Strain Name"
+msgstr "Nome da Cepa"
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:35
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:12
@@ -340,8 +406,8 @@ msgstr "Cepa"
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:47
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:33
-msgid "Isolation Source"
-msgstr "Origem do Isolamento"
+msgid "Origin"
+msgstr "Origem"
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:50
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:37
@@ -360,6 +426,11 @@ msgstr "Meio de Cultivo"
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:59
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:49
+msgid "Cultivation Temperature"
+msgstr "Temperatura de Cultivo"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:62
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:53
 msgid "Preservation Method"
 msgstr "Método de Preservação"
 
@@ -397,10 +468,24 @@ msgstr "Privado"
 msgid "Public"
 msgstr "Público"
 
-#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:80
-#: /home/rsilva/Documents/bipagen/app/templates/form.html:72
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:83
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:76
 msgid "Observations"
 msgstr "Observações"
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:86
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:80
+msgid "Publications"
+msgstr "Publicações"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:86
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:117
+msgid "Link URL"
+msgstr "URL do Link"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:103
+msgid "Include another publication"
+msgstr "Incluir outra publicação"
 
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:2
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:4
@@ -410,6 +495,22 @@ msgstr "Novo"
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:4
 msgid "Microorganism Record"
 msgstr "Registro de Microrganismo"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:8
+msgid "Import from XLSX"
+msgstr "Importar de XLSX"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:10
+msgid "Upload an .xlsx file to import multiple records at once. Column headers are matched to record fields by name (case-insensitive); unmatched columns go to the Observations field."
+msgstr "Envie um arquivo .xlsx para importar vários registros de uma vez. Os cabeçalhos das colunas são associados aos campos do registro pelo nome (sem diferenciar maiúsculas/minúsculas); colunas não reconhecidas vão para o campo Observações."
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:13
+msgid "Spreadsheet"
+msgstr "Planilha"
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:24
+msgid "Import"
+msgstr "Importar"
 
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:14
 #: /home/rsilva/Documents/bipagen/app/templates/servicos.html:35
@@ -750,8 +851,8 @@ msgid "Download QR PDF"
 msgstr "Baixar PDF dos QR Codes"
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:21
-msgid "Search by code, genus, species, type or responsible..."
-msgstr "Buscar por código, gênero, espécie, tipo ou responsável..."
+msgid "Search by strain name, genus, species, type or responsible..."
+msgstr "Buscar por nome da cepa, gênero, espécie, tipo ou responsável..."
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:24
 msgid "Search"
@@ -760,10 +861,6 @@ msgstr "Buscar"
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:26
 msgid "Clear"
 msgstr "Limpar"
-
-#: /home/rsilva/Documents/bipagen/app/templates/listar.html:35
-msgid "Code"
-msgstr "Código"
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:43
 #: /home/rsilva/Documents/bipagen/app/templates/usuarios.html:17
@@ -784,8 +881,8 @@ msgid "Close"
 msgstr "Fechar"
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:117
-msgid "Point the camera at a collection QR code to search by its code."
-msgstr "Aponte a câmera para um código QR da coleção para buscar pelo código."
+msgid "Point the camera at a collection QR code to search by its strain name."
+msgstr "Aponte a câmera para um código QR da coleção para buscar pelo nome da cepa."
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:132
 msgid "This browser does not support camera access."
@@ -948,4 +1045,8 @@ msgstr "Levedura"
 #. tipo (dynamic DB value)
 msgid "Vírus"
 msgstr "Vírus"
+
+#. tipo (dynamic DB value)
+msgid "Outros"
+msgstr "Outros"
 

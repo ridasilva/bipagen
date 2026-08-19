@@ -94,6 +94,48 @@ msgstr ""
 msgid "Record added successfully!"
 msgstr ""
 
+#: /home/rsilva/Documents/bipagen/app/routes.py:416
+msgid "Please upload an XLSX file."
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:420
+#, python-format
+msgid "Error reading the XLSX file: %(message)s"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:428
+msgid "The file is empty."
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:461
+#, python-format
+msgid "Row %(n)s: strain name is required"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:466
+#, python-format
+msgid "Row %(n)s: strain name '%(name)s' already exists"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:479
+#, python-format
+msgid "Row %(n)s: unknown type '%(name)s'"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:485
+msgid "Error importing: some records have duplicate strain names."
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:490
+#, python-format
+msgid "%(count)s record(s) imported."
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:492
+#, python-format
+msgid "%(count)s error(s): "
+msgstr ""
+
 #: /home/rsilva/Documents/bipagen/app/routes.py:264
 #: /home/rsilva/Documents/bipagen/app/routes.py:308
 #: /home/rsilva/Documents/bipagen/app/routes.py:322
@@ -107,6 +149,29 @@ msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/routes.py:319
 msgid "Record deleted successfully!"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:546
+msgid "No records selected."
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:558
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:138
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:141
+msgid "Delete selected records?"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/routes.py:561
+#, python-format
+msgid "%(count)s record(s) deleted."
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:139
+msgid "Select at least one record to edit."
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:140
+msgid "Edit operates on a single record. Select only one."
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/routes.py:350
@@ -305,12 +370,13 @@ msgid "Back"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:25
-msgid "Scans to access code"
+msgid "Scans to open the record"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:32
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:8
-msgid "Access Code"
+#: /home/rsilva/Documents/bipagen/app/templates/listar.html:35
+msgid "Strain Name"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:35
@@ -339,7 +405,7 @@ msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:47
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:33
-msgid "Isolation Source"
+msgid "Origin"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:50
@@ -359,6 +425,11 @@ msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:59
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:49
+msgid "Cultivation Temperature"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:62
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:53
 msgid "Preservation Method"
 msgstr ""
 
@@ -396,9 +467,23 @@ msgstr ""
 msgid "Public"
 msgstr ""
 
-#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:80
-#: /home/rsilva/Documents/bipagen/app/templates/form.html:72
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:83
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:76
 msgid "Observations"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/detalhe.html:86
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:80
+msgid "Publications"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:86
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:117
+msgid "Link URL"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:103
+msgid "Include another publication"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:2
@@ -408,6 +493,22 @@ msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:4
 msgid "Microorganism Record"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:8
+msgid "Import from XLSX"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:10
+msgid "Upload an .xlsx file to import multiple records at once. Column headers are matched to record fields by name (case-insensitive); unmatched columns go to the Observations field."
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:13
+msgid "Spreadsheet"
+msgstr ""
+
+#: /home/rsilva/Documents/bipagen/app/templates/form.html:24
+msgid "Import"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/form.html:14
@@ -701,7 +802,7 @@ msgid "Download QR PDF"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:21
-msgid "Search by code, genus, species, type or responsible..."
+msgid "Search by strain name, genus, species, type or responsible..."
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:24
@@ -710,10 +811,6 @@ msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:26
 msgid "Clear"
-msgstr ""
-
-#: /home/rsilva/Documents/bipagen/app/templates/listar.html:35
-msgid "Code"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:43
@@ -735,7 +832,7 @@ msgid "Close"
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:117
-msgid "Point the camera at a collection QR code to search by its code."
+msgid "Point the camera at a collection QR code to search by its strain name."
 msgstr ""
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:132

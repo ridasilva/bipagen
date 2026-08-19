@@ -34,3 +34,7 @@ msgstr "Yeast"
 msgid "Vírus"
 msgstr "Virus"
 
+#. tipo (dynamic DB value, English override)
+msgid "Outros"
+msgstr "Others"
+

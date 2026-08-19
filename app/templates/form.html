@@ -3,16 +3,40 @@
 {% block content %}
 <h2>{{ _('Edit') if registro else _('New') }} {{ _('Microorganism Record') }}</h2>
 <hr>
-<form method="POST" class="row g-3">
+{% if not registro %}
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-dark text-white"><i class="bi bi-file-earmark-excel"></i> {{ _('Import from XLSX') }}</div>
+    <div class="card-body">
+        <p class="text-muted mb-3">{{ _('Upload an .xlsx file to import multiple records at once. Column headers are matched to record fields by name (case-insensitive); unmatched columns go to the Observations field.') }}</p>
+        <form method="POST" action="{{ url_for('main.importar') }}" enctype="multipart/form-data" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label">{{ _('Spreadsheet') }}</label>
+                <input type="file" name="arquivo_xlsx" accept=".xlsx" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ _('Status') }}</label>
+                <select name="status" class="form-select">
+                    <option value="public">{{ _('Public') }}</option>
+                    <option value="private">{{ _('Private') }}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-success"><i class="bi bi-upload"></i> {{ _('Import') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+<form method="POST" enctype="multipart/form-data" class="row g-3">
     <div class="col-md-4">
-        <label class="form-label">{{ _('Access Code') }} *</label>
-        <input type="text" name="codigo_acesso" class="form-control" required value="{{ registro.codigo_acesso if registro else '' }}">
+        <label class="form-label">{{ _('Strain Name') }} *</label>
+        <input type="text" name="nome_cepa" class="form-control" required value="{{ registro.nome_cepa if registro else '' }}">
     </div>
     <div class="col-md-4">
         <label class="form-label">{{ _('Type') }} *</label>
         <select name="tipo" class="form-select" required>
             <option value="">{{ _('Select...') }}</option>
-            {% for t in ['Fungo', 'Bactéria', 'Levedura', 'Vírus'] %}
+            {% for t in ['Fungo', 'Bactéria', 'Levedura', 'Outros'] %}
             <option value="{{ t }}" {{ 'selected' if registro and registro.tipo == t else '' }}>{{ _(t) }}</option>
             {% endfor %}
         </select>
@@ -30,8 +54,8 @@
         <input type="text" name="cepa_strain" class="form-control" value="{{ registro.cepa_strain if registro else '' }}">
     </div>
     <div class="col-md-4">
-        <label class="form-label">{{ _('Isolation Source') }}</label>
-        <input type="text" name="origem_isolamento" class="form-control" value="{{ registro.origem_isolamento if registro else '' }}">
+        <label class="form-label">{{ _('Origin') }}</label>
+        <input type="text" name="origem" class="form-control" value="{{ registro.origem if registro else '' }}">
     </div>
     <div class="col-md-4">
         <label class="form-label">{{ _('Collection Site') }}</label>
@@ -44,6 +68,10 @@
     <div class="col-md-3">
         <label class="form-label">{{ _('Culture Medium') }}</label>
         <input type="text" name="meio_cultivo" class="form-control" value="{{ registro.meio_cultivo if registro else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">{{ _('Cultivation Temperature') }}</label>
+        <input type="text" name="temperatura_cultivo" class="form-control" value="{{ registro.temperatura_cultivo if registro else '' }}">
     </div>
     <div class="col-md-3">
         <label class="form-label">{{ _('Preservation Method') }}</label>
@@ -73,8 +101,92 @@
         <textarea name="observacoes" class="form-control" rows="3">{{ registro.observacoes if registro else '' }}</textarea>
     </div>
     <div class="col-12">
+        <label class="form-label">{{ _('Publications') }}</label>
+        <div id="publicacoes-list">
+            {% set pubs = registro.publicacoes_list() if registro else [] %}
+            {% for p in pubs %}
+            <div class="publicacao-row row g-2 mb-2">
+                <div class="col-md-4">
+                    <input type="text" name="publicacao_valor" class="form-control" placeholder="{{ _('Link URL') }}" value="{{ p.valor if p.tipo == 'link' else '' }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="file" name="publicacao_arquivo" class="form-control">
+                </div>
+                <div class="col-md-3 d-flex align-items-center">
+                    {% if p.tipo == 'arquivo' %}
+                    <a href="{{ url_for('static', filename='uploads/' ~ p.valor) }}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-paperclip"></i> {{ p.display }}</a>
+                    {% endif %}
+                </div>
+                <div class="col-md-2 d-flex align-items-center">
+                    <input type="hidden" name="publicacao_existente" value="{{ 'arquivo:' ~ p.valor ~ '|' ~ p.display if p.tipo == 'arquivo' else p.valor }}">
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-publicacao" title="{{ _('Remove') }}"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-publicacao" class="btn btn-outline-primary btn-sm d-none"><i class="bi bi-plus-circle"></i> {{ _('Include another publication') }}</button>
+    </div>
+    <div class="col-12">
         <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> {{ _('Save') }}</button>
         <a href="{{ url_for('main.listar') }}" class="btn btn-secondary">{{ _('Cancel') }}</a>
     </div>
 </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function pubRowHtml() {
+        return '<div class="publicacao-row row g-2 mb-2">' +
+            '<div class="col-md-4">' +
+            '<input type="text" name="publicacao_valor" class="form-control" placeholder="{{ _('Link URL') }}">' +
+            '</div>' +
+            '<div class="col-md-3">' +
+            '<input type="file" name="publicacao_arquivo" class="form-control">' +
+            '</div>' +
+            '<div class="col-md-3 d-flex align-items-center">' +
+            '<input type="hidden" name="publicacao_existente" value="">' +
+            '</div>' +
+            '<div class="col-md-2 d-flex align-items-center">' +
+            '<button type="button" class="btn btn-outline-danger btn-sm remove-publicacao" title="{{ _('Remove') }}"><i class="bi bi-trash"></i></button>' +
+            '</div>' +
+            '</div>';
+    }
+
+    function refreshPubButton() {
+        const rows = document.querySelectorAll('#publicacoes-list .publicacao-row');
+        let has = false;
+        rows.forEach(r => {
+            const url = r.querySelector('input[name="publicacao_valor"]').value.trim();
+            const file = r.querySelector('input[name="publicacao_arquivo"]').files.length;
+            const existing = r.querySelector('input[name="publicacao_existente"]').value.trim();
+            if (url || file || existing) has = true;
+        });
+        document.getElementById('add-publicacao').classList.toggle('d-none', !has);
+    }
+
+    const pubList = document.getElementById('publicacoes-list');
+    const addBtn = document.getElementById('add-publicacao');
+
+    if (!pubList.querySelector('.publicacao-row')) {
+        pubList.insertAdjacentHTML('beforeend', pubRowHtml());
+    }
+
+    pubList.addEventListener('input', refreshPubButton);
+    pubList.addEventListener('change', refreshPubButton);
+
+    pubList.addEventListener('click', (e) => {
+        const btn = e.target.closest('.remove-publicacao');
+        if (btn) {
+            btn.closest('.publicacao-row').remove();
+            refreshPubButton();
+        }
+    });
+
+    addBtn.addEventListener('click', () => {
+        pubList.insertAdjacentHTML('beforeend', pubRowHtml());
+        refreshPubButton();
+    });
+
+    refreshPubButton();
+</script>
 {% endblock %}

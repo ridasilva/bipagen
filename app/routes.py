@@ -1,4 +1,11 @@
 from functools import wraps
+import os
+import unicodedata
+import uuid
+from datetime import datetime
+from openpyxl import load_workbook
+from sqlalchemy.exc import IntegrityError
+from werkzeug.utils import secure_filename
 from flask import (
     Blueprint,
     render_template,
@@ -20,11 +27,112 @@ from app.models import (
     STATUS_PUBLIC,
     STATUS_PRIVATE,
 )
-from datetime import datetime
 from flask_babel import gettext as _
 from app.qr_utils import generate_qr, generate_qr_pdf
 
 main = Blueprint("main", __name__)
+
+UPLOAD_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static", "uploads"
+)
+
+FIELD_ALIASES = {
+    "nome_cepa": ["Strain Name", "Nome da Cepa", "Nombre de la Cepa"],
+    "tipo": ["Type", "Tipo", "Tipo"],
+    "genero": ["Genus", "Gênero", "Género"],
+    "especie": ["Species", "Espécie", "Especie"],
+    "cepa_strain": ["Strain", "Cepa", "Cepa"],
+    "origem": ["Origin", "Origem", "Origen"],
+    "local_coleta": ["Collection Site", "Local de Coleta", "Lugar de Recolección"],
+    "data_isolamento": ["Isolation Date", "Data de Isolamento", "Fecha de Aislamiento"],
+    "meio_cultivo": ["Culture Medium", "Meio de Cultivo", "Medio de Cultivo"],
+    "temperatura_cultivo": [
+        "Cultivation Temperature",
+        "Temperatura de Cultivo",
+        "Temperatura de Cultivo",
+    ],
+    "metodo_preservacao": [
+        "Preservation Method",
+        "Método de Preservação",
+        "Método de Preservación",
+    ],
+    "local_armazenamento": [
+        "Storage Location",
+        "Local de Armazenamento",
+        "Ubicación de Almacenamiento",
+    ],
+    "responsavel": ["Responsible", "Responsável", "Responsable"],
+    "data_cadastro": ["Registration Date", "Data de Cadastro", "Fecha de Registro"],
+    "observacoes": ["Observations", "Observações", "Observaciones"],
+    "publicacoes": ["Publications", "Publicações", "Publicaciones"],
+    "status": ["Status", "Status", "Estado"],
+}
+
+
+def _norm(s):
+    s = unicodedata.normalize("NFD", s or "")
+    return "".join(c for c in s if unicodedata.category(c) != "Mn").strip().lower()
+
+
+TIPOS_VALIDOS = ["Fungo", "Bactéria", "Levedura", "Vírus", "Outros"]
+TIPOS_ALIASES = {
+    "fungo": "Fungo", "fungos": "Fungo", "hongo": "Fungo", "hongos": "Fungo",
+    "bacteria": "Bactéria", "bacterium": "Bactéria",
+    "levedura": "Levedura", "levadura": "Levedura", "yeast": "Levedura",
+    "virus": "Vírus",
+    "outros": "Outros", "outro": "Outros", "otros": "Outros", "otro": "Outros", "other": "Outros",
+}
+
+
+def _cell_str(v):
+    if v is None:
+        return ""
+    if isinstance(v, float) and v.is_integer():
+        v = int(v)
+    return str(v).strip()
+
+
+def _parse_date(v):
+    if v is None:
+        return None
+    if isinstance(v, datetime):
+        return v.date()
+    s = _cell_str(v)[:10]
+    try:
+        return datetime.strptime(s, "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def process_publicacoes():
+    valores = request.form.getlist("publicacao_valor")
+    existentes = request.form.getlist("publicacao_existente")
+    arquivos = request.files.getlist("publicacao_arquivo")
+    entries = []
+    for i, valor in enumerate(valores):
+        valor = (valor or "").strip()
+        existente = existentes[i].strip() if i < len(existentes) else ""
+        arquivo = arquivos[i] if i < len(arquivos) else None
+        if arquivo and arquivo.filename:
+            orig = secure_filename(arquivo.filename) or "arquivo"
+            ext = os.path.splitext(orig)[1] or ""
+            disk = f"pub_{uuid.uuid4().hex}{ext}"
+            os.makedirs(UPLOAD_DIR, exist_ok=True)
+            arquivo.save(os.path.join(UPLOAD_DIR, disk))
+            entries.append({"tipo": "arquivo", "valor": disk, "display": orig})
+        elif valor:
+            entries.append({"tipo": "link", "valor": valor})
+        elif existente:
+            if existente.startswith("arquivo:"):
+                raw = existente[len("arquivo:"):]
+                if "|" in raw:
+                    disk, display = raw.split("|", 1)
+                else:
+                    disk, display = raw, raw
+                entries.append({"tipo": "arquivo", "valor": disk, "display": display})
+            else:
+                entries.append({"tipo": "link", "valor": existente})
+    return Colecao.serialize_publicacoes(entries)
 
 
 @main.route("/lang/<lang>")
@@ -199,7 +307,7 @@ def listar():
     if search:
         query = query.filter(
             db.or_(
-                Colecao.codigo_acesso.ilike(f"%{search}%"),
+                Colecao.nome_cepa.ilike(f"%{search}%"),
                 Colecao.genero.ilike(f"%{search}%"),
                 Colecao.especie.ilike(f"%{search}%"),
                 Colecao.tipo.ilike(f"%{search}%"),
@@ -237,20 +345,22 @@ def novo():
                 else STATUS_PUBLIC
             )
             registro = Colecao(
-                codigo_acesso=request.form["codigo_acesso"],
+                nome_cepa=request.form["nome_cepa"],
                 tipo=request.form["tipo"],
                 genero=request.form["genero"],
                 especie=request.form["especie"],
                 cepa_strain=request.form.get("cepa_strain"),
-                origem_isolamento=request.form.get("origem_isolamento"),
+                origem=request.form.get("origem"),
                 local_coleta=request.form.get("local_coleta"),
                 data_isolamento=data_isol,
                 meio_cultivo=request.form.get("meio_cultivo"),
+                temperatura_cultivo=request.form.get("temperatura_cultivo"),
                 metodo_preservacao=request.form.get("metodo_preservacao"),
                 local_armazenamento=request.form.get("local_armazenamento"),
                 responsavel=request.form.get("responsavel"),
                 data_cadastro=data_cad,
                 observacoes=request.form.get("observacoes"),
+                publicacoes=process_publicacoes(),
                 status=status,
                 owner_id=user.id,
             )
@@ -274,12 +384,12 @@ def editar(id):
         abort(403)
     if request.method == "POST":
         try:
-            registro.codigo_acesso = request.form["codigo_acesso"]
+            registro.nome_cepa = request.form["nome_cepa"]
             registro.tipo = request.form["tipo"]
             registro.genero = request.form["genero"]
             registro.especie = request.form["especie"]
             registro.cepa_strain = request.form.get("cepa_strain")
-            registro.origem_isolamento = request.form.get("origem_isolamento")
+            registro.origem = request.form.get("origem")
             registro.local_coleta = request.form.get("local_coleta")
             registro.data_isolamento = (
                 datetime.strptime(request.form["data_isolamento"], "%Y-%m-%d").date()
@@ -287,6 +397,7 @@ def editar(id):
                 else None
             )
             registro.meio_cultivo = request.form.get("meio_cultivo")
+            registro.temperatura_cultivo = request.form.get("temperatura_cultivo")
             registro.metodo_preservacao = request.form.get("metodo_preservacao")
             registro.local_armazenamento = request.form.get("local_armazenamento")
             registro.responsavel = request.form.get("responsavel")
@@ -296,6 +407,7 @@ def editar(id):
                 else registro.data_cadastro
             )
             registro.observacoes = request.form.get("observacoes")
+            registro.publicacoes = process_publicacoes()
             status = request.form.get("status")
             if status in (STATUS_PUBLIC, STATUS_PRIVATE):
                 registro.status = status
@@ -309,6 +421,115 @@ def editar(id):
     return render_template("form.html", registro=registro)
 
 
+@main.route("/colecao/importar", methods=["POST"])
+@role_required(ROLE_ADMIN, ROLE_EDITOR)
+def importar():
+    arquivo = request.files.get("arquivo_xlsx")
+    status = request.form.get("status", STATUS_PUBLIC)
+    if status not in (STATUS_PUBLIC, STATUS_PRIVATE):
+        status = STATUS_PUBLIC
+    if not arquivo or not arquivo.filename:
+        flash(_("Please upload an XLSX file."), "danger")
+        return redirect(url_for("main.novo"))
+    try:
+        wb = load_workbook(arquivo, data_only=True)
+    except Exception as e:
+        flash(_("Error reading the XLSX file: %(message)s") % {"message": e}, "danger")
+        return redirect(url_for("main.novo"))
+
+    ws = wb.active
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows or not any(c is not None for c in rows[0]):
+        flash(_("The file is empty."), "danger")
+        return redirect(url_for("main.novo"))
+
+    headers = [_cell_str(c) for c in rows[0]]
+    alias_map = {}
+    for field, aliases in FIELD_ALIASES.items():
+        for a in aliases:
+            alias_map[_norm(a)] = field
+    header_fields = [alias_map.get(_norm(h)) for h in headers]
+
+    user = get_current_user()
+    criados = 0
+    erros = []
+    novos = []
+    with db.session.no_autoflush:
+        existentes = {
+            r[0] for r in db.session.query(Colecao.nome_cepa).all()
+        }
+    vistos = set()
+    for r_idx, row in enumerate(rows[1:], start=2):
+        if row is None or all(not _cell_str(c) for c in row):
+            continue
+        registro = Colecao(owner_id=user.id, status=status)
+        extras = []
+        obs_direta = None
+        for h_idx, valor in enumerate(row):
+            campo = header_fields[h_idx] if h_idx < len(header_fields) else None
+            valor_txt = _cell_str(valor)
+            if campo is None:
+                if valor_txt:
+                    extras.append(f"{headers[h_idx]}: {valor_txt}")
+            elif campo == "status":
+                continue
+            elif campo == "observacoes":
+                if valor_txt:
+                    obs_direta = valor_txt
+            elif campo == "publicacoes":
+                registro.publicacoes = valor_txt or None
+            elif campo in ("data_isolamento", "data_cadastro"):
+                d = _parse_date(valor)
+                if d:
+                    setattr(registro, campo, d)
+            elif campo == "tipo":
+                registro.tipo = (valor_txt[:1].upper() + valor_txt[1:]) if valor_txt else ""
+            else:
+                setattr(registro, campo, valor_txt or None)
+        registro.tipo = registro.tipo or ""
+        registro.genero = registro.genero or ""
+        registro.especie = registro.especie or ""
+        if registro.tipo:
+            canonical = TIPOS_ALIASES.get(_norm(registro.tipo))
+            if canonical is None:
+                erros.append(
+                    _("Row %(n)s: unknown type '%(name)s'") % {"n": r_idx, "name": registro.tipo}
+                )
+                continue
+            registro.tipo = canonical
+        if not registro.nome_cepa:
+            erros.append(_("Row %(n)s: strain name is required") % {"n": r_idx})
+            continue
+        if registro.nome_cepa in existentes or registro.nome_cepa in vistos:
+            erros.append(
+                _("Row %(n)s: strain name '%(name)s' already exists")
+                % {"n": r_idx, "name": registro.nome_cepa}
+            )
+            continue
+        vistos.add(registro.nome_cepa)
+        obs_parts = [p for p in (obs_direta, "; ".join(extras)) if p]
+        registro.observacoes = "\n".join(obs_parts) if obs_parts else None
+        db.session.add(registro)
+        novos.append(registro)
+        criados += 1
+
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash(_("Error importing: some records have duplicate strain names."), "danger")
+        return redirect(url_for("main.novo"))
+
+    for registro in novos:
+        generate_qr(registro)
+
+    msg = _("%(count)s record(s) imported.") % {"count": criados}
+    flash(msg, "success")
+    if erros:
+        flash(_("%(count)s error(s): ") % {"count": len(erros)} + " | ".join(erros[:8]), "warning")
+    return redirect(url_for("main.listar"))
+
+
 @main.route("/colecao/excluir/<int:id>", methods=["POST"])
 @role_required(ROLE_ADMIN)
 def excluir(id):
@@ -317,6 +538,33 @@ def excluir(id):
         db.session.delete(registro)
         db.session.commit()
         flash(_("Record deleted successfully!"), "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(_("Error: %(message)s") % {"message": e}, "danger")
+    return redirect(url_for("main.listar"))
+
+
+@main.route("/colecao/excluir-lote", methods=["POST"])
+@role_required(ROLE_ADMIN)
+def excluir_lote():
+    ids = request.form.getlist("ids")
+    if not ids:
+        flash(_("No records selected."), "warning")
+        return redirect(url_for("main.listar"))
+    deletados = 0
+    try:
+        for raw_id in ids:
+            try:
+                rid = int(raw_id)
+            except (TypeError, ValueError):
+                continue
+            registro = Colecao.query.get(rid)
+            if registro:
+                db.session.delete(registro)
+                deletados += 1
+        db.session.commit()
+        if deletados:
+            flash(_("%(count)s record(s) deleted.") % {"count": deletados}, "success")
     except Exception as e:
         db.session.rollback()
         flash(_("Error: %(message)s") % {"message": e}, "danger")

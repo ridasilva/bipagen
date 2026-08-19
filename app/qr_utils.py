@@ -25,8 +25,8 @@ def qr_content(registro):
     return json.dumps(data, ensure_ascii=False)
 
 
-def qr_filename(codigo_acesso):
-    return os.path.join(QR_DIR, f"{codigo_acesso}.png")
+def qr_filename(nome_cepa):
+    return os.path.join(QR_DIR, f"{nome_cepa}.png")
 
 
 def generate_qr(registro):
@@ -36,7 +36,7 @@ def generate_qr(registro):
         box_size=QR_BOX_SIZE,
         border=QR_BORDER,
     )
-    path = qr_filename(registro.codigo_acesso)
+    path = qr_filename(registro.nome_cepa)
     img.save(path)
     return path
 
@@ -55,10 +55,10 @@ def generate_qr_pdf(registros, output_path=None):
     c = canvas.Canvas(output_path or buffer, pagesize=page)
 
     for i, registro in enumerate(registros):
-        path = qr_filename(registro.codigo_acesso)
+        path = qr_filename(registro.nome_cepa)
         if not os.path.exists(path):
             generate_qr(registro)
-            path = qr_filename(registro.codigo_acesso)
+            path = qr_filename(registro.nome_cepa)
         col = i % cols
         row = i // cols
         per_page = int((page_h - 2 * margin) // cell_h)
@@ -75,7 +75,7 @@ def generate_qr_pdf(registros, output_path=None):
         c.drawImage(path, x, y, width=qr_w, height=qr_h, preserveAspectRatio=True, mask="auto")
         c.setFont("Helvetica-Bold", 9)
         c.setFillColor(colors.black)
-        c.drawString(x, y - 12, f"{registro.codigo_acesso}")
+        c.drawString(x, y - 12, f"{registro.nome_cepa}")
         c.setFont("Helvetica", 8)
         c.drawString(x, y - 21, f"{registro.genero} {registro.especie}"[:32])
 

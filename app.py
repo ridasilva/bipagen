@@ -54,6 +54,28 @@ def migrate_schema():
                     "REFERENCES usuarios(id)"
                 )
             )
+        columns = {col["name"] for col in inspector.get_columns(table)}
+        if "codigo_acesso" in columns:
+            db.session.execute(
+                db.text(f"ALTER TABLE {table} RENAME COLUMN codigo_acesso TO nome_cepa")
+            )
+        columns = {col["name"] for col in inspector.get_columns(table)}
+        if "origem_isolamento" in columns:
+            db.session.execute(
+                db.text(f"ALTER TABLE {table} RENAME COLUMN origem_isolamento TO origem")
+            )
+        columns = {col["name"] for col in inspector.get_columns(table)}
+        if "temperatura_cultivo" not in columns:
+            db.session.execute(
+                db.text(
+                    f"ALTER TABLE {table} ADD COLUMN temperatura_cultivo VARCHAR(100)"
+                )
+            )
+        columns = {col["name"] for col in inspector.get_columns(table)}
+        if "publicacoes" not in columns:
+            db.session.execute(
+                db.text(f"ALTER TABLE {table} ADD COLUMN publicacoes TEXT")
+            )
         db.session.commit()
 
 

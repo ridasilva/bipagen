@@ -1,0 +1,41 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-bipagen_root_pass}
+      MYSQL_DATABASE: bipagen
+      MYSQL_USER: bipagen
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-bipagen_pass}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      SQLALCHEMY_DATABASE_URI: mysql+pymysql://${MYSQL_USER:-bipagen}:${MYSQL_PASSWORD:-bipagen_pass}@db:3306/bipagen
+      SECRET_KEY: ${SECRET_KEY:-bipagen-secret-key}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@bipagen.local}
+    volumes:
+      - qr_codes:/app/static/qr_codes
+      - uploads:/app/static/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+  qr_codes:
+  uploads:

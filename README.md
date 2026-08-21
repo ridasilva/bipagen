@@ -97,4 +97,28 @@ conda activate bgen
 python app.py
 ```
 
-The app runs at `http://localhost:5002`. On first startup it creates the SQLite database and the default admin user automatically.
+The app runs at `http://localhost:5000`. On first startup it creates the SQLite database and the default admin user automatically.
+
+## Docker deployment
+
+Requires Docker and the Docker Compose plugin (`docker compose version` to check).
+
+Build and start both services (app + MySQL):
+
+```
+docker compose up -d --build
+```
+
+Configuration is read from `.env` (`SECRET_KEY`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_EMAIL`) and from `MYSQL_ROOT_PASSWORD` / `MYSQL_PASSWORD` for the database. Copy `.env.example` to `.env` and adjust before deploying; unset variables fall back to defaults defined in `docker-compose.yml`.
+
+The app runs at `http://localhost:5000`. On first startup it creates the database tables and the default admin user automatically. Data is persisted in the named volumes `mysql_data`, `qr_codes`, and `uploads`.
+
+Useful commands:
+
+```
+docker compose logs -f app      # follow app logs
+docker compose ps               # check status
+docker compose stop             # stop services
+docker compose down             # stop and remove containers
+docker compose up -d --build    # rebuild after code changes
+```

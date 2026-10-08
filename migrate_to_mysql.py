@@ -66,6 +66,7 @@ with app.app_context():
                 continue
             new_strain = Colecao(
                 id=s.id,
+                codigo_unico=s.codigo_unico,
                 nome_cepa=s.nome_cepa,
                 tipo=s.tipo,
                 genero=s.genero,

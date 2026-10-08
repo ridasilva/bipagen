@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block title %}{{ _('Collection') }}{% endblock %}
 {% block content %}
+{% macro th_ord(col, label) %}
+{%- set ativo = sort == col -%}
+{%- set proximo = 'asc' if ativo and order == 'desc' else ('desc' if ativo else 'asc') -%}
+<th>
+    <a href="{{ url_for('main.listar', sort=col, order=proximo, search=search) }}"
+       class="text-white text-decoration-none d-inline-flex align-items-center gap-1">
+        {{ label }}
+        <i class="bi {{ 'bi-arrow-down' if ativo and order == 'desc' else ('bi-arrow-up' if ativo else 'bi-arrow-down-up') }}"></i>
+    </a>
+</th>
+{% endmacro %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>{{ _('Microorganism Collection') }}</h2>
     <div>
@@ -8,7 +19,7 @@
             <i class="bi bi-camera"></i> {{ _('Scan QR') }}
         </button>
         {% if current_user and current_user.is_admin %}
-        <a href="{{ url_for('main.pdf') }}" class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf"></i> {{ _('Download QR PDF') }}</a>
+        <a href="{{ url_for('main.pdf') }}" id="pdf-btn" class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf"></i> {{ _('Download QR PDF') }}</a>
         {% endif %}
         {% if current_user and current_user.can_edit() %}
         <a href="{{ url_for('main.novo') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> {{ _('New Record') }}</a>
@@ -26,13 +37,15 @@
 {% endif %}
 
 <form method="GET" class="row g-2 mb-3">
+    <input type="hidden" name="sort" value="{{ sort }}">
+    <input type="hidden" name="order" value="{{ order }}">
     <div class="col-auto flex-grow-1">
-        <input type="text" name="search" id="search-input" class="form-control" placeholder="{{ _('Search by strain name, genus, species, type or responsible...') }}" value="{{ search }}">
+        <input type="text" name="search" id="search-input" class="form-control" placeholder="{{ _('Search by ID, strain name, genus, species or type...') }}" value="{{ search }}">
     </div>
     <div class="col-auto">
         <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i> {{ _('Search') }}</button>
         {% if search %}
-        <a href="{{ url_for('main.listar') }}" class="btn btn-outline-danger"><i class="bi bi-x-circle"></i> {{ _('Clear') }}</a>
+        <a href="{{ url_for('main.listar', sort=sort, order=order) }}" class="btn btn-outline-danger"><i class="bi bi-x-circle"></i> {{ _('Clear') }}</a>
         {% endif %}
     </div>
 </form>
@@ -45,14 +58,12 @@
                 {% if current_user and current_user.can_edit() %}
                 <th class="text-center"><input type="checkbox" id="select-all" class="form-check-input"></th>
                 {% endif %}
-                <th>{{ _('Strain Name') }}</th>
+                {{ th_ord('codigo_unico', _('ID')) }}
+                {{ th_ord('nome_cepa', _('Strain Name')) }}
                 <th>QR</th>
-                <th>{{ _('Type') }}</th>
-                <th>{{ _('Genus') }}</th>
-                <th>{{ _('Species') }}</th>
-                <th>{{ _('Strain') }}</th>
-                <th>{{ _('Responsible') }}</th>
-                <th>{{ _('Status') }}</th>
+                {{ th_ord('tipo', _('Type')) }}
+                {{ th_ord('genero', _('Genus')) }}
+                {{ th_ord('especie', _('Species')) }}
             </tr>
         </thead>
         <tbody>
@@ -63,27 +74,19 @@
                     <input type="checkbox" name="ids" value="{{ r.id }}" class="form-check-input row-check"{% if not (current_user.is_admin or current_user.id == r.owner_id) %} disabled{% endif %}>
                 </td>
                 {% endif %}
+                <td class="text-nowrap">{{ r.codigo_unico or '—' }}</td>
                 <td><a href="{{ url_for('main.detalhe', id=r.id) }}">{{ r.nome_cepa }}</a></td>
                 <td>
                     <a href="{{ url_for('main.detalhe', id=r.id) }}" title="{{ r.nome_cepa }}">
-                        <img src="{{ url_for('static', filename='qr_codes/' ~ r.nome_cepa ~ '.png') }}" alt="QR" width="40" height="40" class="img-thumbnail">
+                        <img src="{{ url_for('static', filename='qr_codes/' ~ r.qr_arquivo ~ '.png') }}" alt="QR" width="40" height="40" class="img-thumbnail">
                     </a>
                 </td>
                 <td>{{ _(r.tipo) if r.tipo else '—' }}</td>
                 <td><em>{{ r.genero }}</em></td>
                 <td><em>{{ r.especie }}</em></td>
-                <td>{{ r.cepa_strain or '—' }}</td>
-                <td>{{ r.responsavel or '—' }}</td>
-                <td>
-                    {% if r.status == 'private' %}
-                    <span class="badge bg-danger"><i class="bi bi-lock"></i> {{ _('Private') }}</span>
-                    {% else %}
-                    <span class="badge bg-success"><i class="bi bi-unlock"></i> {{ _('Public') }}</span>
-                    {% endif %}
-                </td>
             </tr>
             {% else %}
-            <tr><td colspan="{{ '9' if current_user and current_user.can_edit() else '8' }}" class="text-center text-muted">{{ _('No records found.') }}</td></tr>
+            <tr><td colspan="{{ '7' if current_user and current_user.can_edit() else '6' }}" class="text-center text-muted">{{ _('No records found.') }}</td></tr>
             {% endfor %}
         </tbody>
     </table>
@@ -94,19 +97,19 @@
 <nav>
     <ul class="pagination justify-content-center">
         <li class="page-item {{ 'disabled' if not pagination.has_prev }}">
-            <a class="page-link" href="{{ url_for('main.listar', page=pagination.prev_num, search=search) if pagination.has_prev else '#' }}">&laquo;</a>
+            <a class="page-link" href="{{ url_for('main.listar', page=pagination.prev_num, search=search, sort=sort, order=order) if pagination.has_prev else '#' }}">&laquo;</a>
         </li>
         {% for p in pagination.iter_pages() %}
             {% if p %}
             <li class="page-item {{ 'active' if p == pagination.page }}">
-                <a class="page-link" href="{{ url_for('main.listar', page=p, search=search) }}">{{ p }}</a>
+                <a class="page-link" href="{{ url_for('main.listar', page=p, search=search, sort=sort, order=order) }}">{{ p }}</a>
             </li>
             {% else %}
             <li class="page-item disabled"><span class="page-link">...</span></li>
             {% endif %}
         {% endfor %}
         <li class="page-item {{ 'disabled' if not pagination.has_next }}">
-            <a class="page-link" href="{{ url_for('main.listar', page=pagination.next_num, search=search) if pagination.has_next else '#' }}">&raquo;</a>
+            <a class="page-link" href="{{ url_for('main.listar', page=pagination.next_num, search=search, sort=sort, order=order) if pagination.has_next else '#' }}">&raquo;</a>
         </li>
     </ul>
 </nav>
@@ -285,6 +288,19 @@
             if (ids.length === 0) { alert(I18N.selectToEdit); return; }
             if (ids.length > 1) { alert(I18N.editSingleOnly); return; }
             window.location.href = "{{ url_for('main.editar', id=0) }}".replace("/0", "/" + ids[0]);
+        });
+    }
+
+    const pdfBtn = document.getElementById("pdf-btn");
+    if (pdfBtn) {
+        pdfBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const ids = selectedIds();
+            let url = "{{ url_for('main.pdf') }}";
+            if (ids.length) {
+                url += "?" + ids.map((id) => "ids=" + encodeURIComponent(id)).join("&");
+            }
+            window.location.href = url;
         });
     }
 

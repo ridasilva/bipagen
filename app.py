@@ -3,7 +3,14 @@ import sys
 from dotenv import load_dotenv
 from flask import Flask, request, session
 from flask_babel import Babel
-from app.models import db, Usuario, ROLE_ADMIN, Colecao, STATUS_PUBLIC
+from app.models import (
+    db,
+    Usuario,
+    ROLE_ADMIN,
+    Colecao,
+    STATUS_PUBLIC,
+    backfill_codigo_unico,
+)
 
 load_dotenv()
 
@@ -76,7 +83,29 @@ def migrate_schema():
             db.session.execute(
                 db.text(f"ALTER TABLE {table} ADD COLUMN publicacoes TEXT")
             )
+        columns = {col["name"] for col in inspector.get_columns(table)}
+        if "codigo_unico" not in columns:
+            db.session.execute(
+                db.text(f"ALTER TABLE {table} ADD COLUMN codigo_unico VARCHAR(20)")
+            )
         db.session.commit()
+        backfill_codigo_unico()
+        inspector = db.inspect(db.engine)
+        tem_indice_unico = any(
+            "codigo_unico" in (ix.get("column_names") or []) and ix.get("unique")
+            for ix in inspector.get_indexes(table)
+        ) or any(
+            "codigo_unico" in (uc.get("column_names") or [])
+            for uc in inspector.get_unique_constraints(table)
+        )
+        if not tem_indice_unico:
+            db.session.execute(
+                db.text(
+                    f"CREATE UNIQUE INDEX uq_colecao_codigo_unico ON {table} "
+                    "(codigo_unico)"
+                )
+            )
+            db.session.commit()
 
 
 def create_admin():

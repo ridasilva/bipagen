@@ -852,8 +852,8 @@ msgid "Download QR PDF"
 msgstr "Descargar PDF de QR Codes"
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:21
-msgid "Search by strain name, genus, species, type or responsible..."
-msgstr "Buscar por nombre de la cepa, género, especie, tipo o responsable..."
+msgid "Search by ID, strain name, genus, species or type..."
+msgstr "Buscar por ID, nombre de la cepa, género, especie o tipo..."
 
 #: /home/rsilva/Documents/bipagen/app/templates/listar.html:24
 msgid "Search"
@@ -1052,4 +1052,8 @@ msgstr "Virus"
 #. tipo (dynamic DB value)
 msgid "Outros"
 msgstr "Otros"
+
+#: app/templates/listar.html:48
+msgid "ID"
+msgstr "ID"
 

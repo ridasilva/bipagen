@@ -20,7 +20,7 @@
     <div class="card-body text-center">
         <h5 class="card-title">QR Code</h5>
         <a href="{{ url_for('main.detalhe', id=registro.id) }}">
-            <img src="{{ url_for('static', filename='qr_codes/' ~ registro.nome_cepa ~ '.png') }}" alt="QR {{ registro.nome_cepa }}" width="180" height="180" class="img-thumbnail">
+            <img src="{{ url_for('static', filename='qr_codes/' ~ registro.qr_arquivo ~ '.png') }}" alt="QR {{ registro.nome_cepa }}" width="180" height="180" class="img-thumbnail">
         </a>
         <p class="text-muted small mt-2 mb-0">{{ _('Scans to open the record') }} <strong>{{ registro.nome_cepa }}</strong></p>
     </div>
@@ -29,6 +29,9 @@
 <div class="card shadow-sm">
     <div class="card-body">
         <dl class="row mb-0">
+            <dt class="col-sm-3">{{ _('ID') }}</dt>
+            <dd class="col-sm-9">{{ registro.codigo_unico or '—' }}</dd>
+
             <dt class="col-sm-3">{{ _('Strain Name') }}</dt>
             <dd class="col-sm-9">{{ registro.nome_cepa }}</dd>
 
@@ -41,18 +44,6 @@
             <dt class="col-sm-3">{{ _('Species') }}</dt>
             <dd class="col-sm-9"><em>{{ registro.especie }}</em></dd>
 
-            <dt class="col-sm-3">{{ _('Strain') }}</dt>
-            <dd class="col-sm-9">{{ registro.cepa_strain or '—' }}</dd>
-
-            <dt class="col-sm-3">{{ _('Origin') }}</dt>
-            <dd class="col-sm-9">{{ registro.origem or '—' }}</dd>
-
-            <dt class="col-sm-3">{{ _('Collection Site') }}</dt>
-            <dd class="col-sm-9">{{ registro.local_coleta or '—' }}</dd>
-
-            <dt class="col-sm-3">{{ _('Isolation Date') }}</dt>
-            <dd class="col-sm-9">{{ registro.data_isolamento or '—' }}</dd>
-
             <dt class="col-sm-3">{{ _('Culture Medium') }}</dt>
             <dd class="col-sm-9">{{ registro.meio_cultivo or '—' }}</dd>
 
@@ -64,21 +55,6 @@
 
             <dt class="col-sm-3">{{ _('Storage Location') }}</dt>
             <dd class="col-sm-9">{{ registro.local_armazenamento or '—' }}</dd>
-
-            <dt class="col-sm-3">{{ _('Responsible') }}</dt>
-            <dd class="col-sm-9">{{ registro.responsavel or '—' }}</dd>
-
-            <dt class="col-sm-3">{{ _('Registration Date') }}</dt>
-            <dd class="col-sm-9">{{ registro.data_cadastro or '—' }}</dd>
-
-            <dt class="col-sm-3">{{ _('Status') }}</dt>
-            <dd class="col-sm-9">
-                {% if registro.status == 'private' %}
-                <span class="badge bg-danger"><i class="bi bi-lock"></i> {{ _('Private') }}</span>
-                {% else %}
-                <span class="badge bg-success"><i class="bi bi-unlock"></i> {{ _('Public') }}</span>
-                {% endif %}
-            </dd>
 
             <dt class="col-sm-3">{{ _('Observations') }}</dt>
             <dd class="col-sm-9">{{ registro.observacoes or '—' }}</dd>

@@ -1,8 +1,16 @@
+import re
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import event, or_, select
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from app.qr_utils import qr_safe_name
+
 db = SQLAlchemy()
+
+CODIGO_UNICO_PREFIXO = "GHG"
+CODIGO_UNICO_DIGITOS = 5
+_codigo_unico_re = re.compile(r"^%s(\d+)$" % CODIGO_UNICO_PREFIXO)
 
 ROLE_ADMIN = "admin"
 ROLE_EDITOR = "editor"
@@ -53,6 +61,7 @@ class Colecao(db.Model):
     __tablename__ = "colecao_microrganismos_qr"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    codigo_unico = db.Column(db.String(20), unique=True, nullable=False)
     nome_cepa = db.Column(db.String(50), unique=True, nullable=False)
     tipo = db.Column(db.String(50), nullable=False)
     genero = db.Column(db.String(100), nullable=False)
@@ -73,9 +82,14 @@ class Colecao(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"))
     owner = db.relationship("Usuario", backref="registros")
 
+    @property
+    def qr_arquivo(self):
+        return qr_safe_name(self.nome_cepa)
+
     def to_dict(self):
         return {
             "id": self.id,
+            "codigo_unico": self.codigo_unico,
             "nome_cepa": self.nome_cepa,
             "tipo": self.tipo,
             "genero": self.genero,
@@ -124,3 +138,49 @@ class Colecao(db.Model):
             elif e.get("valor"):
                 lines.append(e["valor"])
         return "\n".join(lines) if lines else None
+
+
+def formatar_codigo_unico(numero):
+    return f"{CODIGO_UNICO_PREFIXO}{numero:0{CODIGO_UNICO_DIGITOS}d}"
+
+
+def _numero_do_codigo_unico(codigo):
+    match = _codigo_unico_re.match(codigo or "")
+    return int(match.group(1)) if match else 0
+
+
+def maior_numero_codigo_unico(session):
+    with session.no_autoflush:
+        codigos = session.execute(
+            select(Colecao.codigo_unico).where(Colecao.codigo_unico.is_not(None))
+        ).scalars()
+    maior = max((_numero_do_codigo_unico(c) for c in codigos), default=0)
+    for pendente in session.new:
+        if isinstance(pendente, Colecao) and pendente.codigo_unico:
+            maior = max(maior, _numero_do_codigo_unico(pendente.codigo_unico))
+    return maior
+
+
+def backfill_codigo_unico():
+    pendentes = (
+        db.session.query(Colecao)
+        .filter(or_(Colecao.codigo_unico.is_(None), Colecao.codigo_unico == ""))
+        .order_by(Colecao.id)
+        .all()
+    )
+    if not pendentes:
+        return 0
+    numero = maior_numero_codigo_unico(db.session) + 1
+    for registro in pendentes:
+        registro.codigo_unico = formatar_codigo_unico(numero)
+        numero += 1
+    db.session.commit()
+    return len(pendentes)
+
+
+@event.listens_for(db.session, "after_attach")
+def _atribuir_codigo_unico(session, instance):
+    if isinstance(instance, Colecao) and not instance.codigo_unico:
+        instance.codigo_unico = formatar_codigo_unico(
+            maior_numero_codigo_unico(session) + 1
+        )

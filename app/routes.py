@@ -298,28 +298,50 @@ def can_view_registro(registro, user):
     return user.is_admin or registro.owner_id == user.id
 
 
+ORDENACAO_COLUNAS = {
+    "codigo_unico": Colecao.codigo_unico,
+    "nome_cepa": Colecao.nome_cepa,
+    "tipo": Colecao.tipo,
+    "genero": Colecao.genero,
+    "especie": Colecao.especie,
+}
+
+
 @main.route("/colecao")
 def listar():
     search = request.args.get("search", "")
     page = request.args.get("page", 1, type=int)
+    sort = request.args.get("sort", "codigo_unico")
+    order = request.args.get("order", "desc")
+    if sort not in ORDENACAO_COLUNAS:
+        sort = "codigo_unico"
+    if order not in ("asc", "desc"):
+        order = "desc"
     per_page = 20
     query = visible_query(get_current_user())
     if search:
         query = query.filter(
             db.or_(
+                Colecao.codigo_unico.ilike(f"%{search}%"),
                 Colecao.nome_cepa.ilike(f"%{search}%"),
                 Colecao.genero.ilike(f"%{search}%"),
                 Colecao.especie.ilike(f"%{search}%"),
                 Colecao.tipo.ilike(f"%{search}%"),
-                Colecao.responsavel.ilike(f"%{search}%"),
             )
         )
-    pagination = query.order_by(Colecao.id.desc()).paginate(
+    coluna = ORDENACAO_COLUNAS[sort]
+    sentido = coluna.desc() if order == "desc" else coluna.asc()
+    pagination = query.order_by(sentido, Colecao.id.asc()).paginate(
         page=page, per_page=per_page, error_out=False
     )
     registros = pagination.items
     return render_template(
-        "listar.html", registros=registros, pagination=pagination, search=search
+        "listar.html",
+        registros=registros,
+        pagination=pagination,
+        search=search,
+        sort=sort,
+        order=order,
     )
 
 
@@ -329,39 +351,24 @@ def novo():
     user = get_current_user()
     if request.method == "POST":
         try:
-            data_isol = (
-                datetime.strptime(request.form["data_isolamento"], "%Y-%m-%d").date()
-                if request.form.get("data_isolamento")
-                else None
-            )
-            data_cad = (
-                datetime.strptime(request.form["data_cadastro"], "%Y-%m-%d").date()
-                if request.form.get("data_cadastro")
-                else datetime.utcnow().date()
-            )
-            status = (
-                request.form.get("status", STATUS_PUBLIC)
-                if request.form.get("status") in (STATUS_PUBLIC, STATUS_PRIVATE)
-                else STATUS_PUBLIC
-            )
             registro = Colecao(
                 nome_cepa=request.form["nome_cepa"],
                 tipo=request.form["tipo"],
                 genero=request.form["genero"],
                 especie=request.form["especie"],
-                cepa_strain=request.form.get("cepa_strain"),
-                origem=request.form.get("origem"),
-                local_coleta=request.form.get("local_coleta"),
-                data_isolamento=data_isol,
+                cepa_strain=None,
+                origem=None,
+                local_coleta=None,
+                data_isolamento=None,
+                responsavel=None,
+                data_cadastro=None,
                 meio_cultivo=request.form.get("meio_cultivo"),
                 temperatura_cultivo=request.form.get("temperatura_cultivo"),
                 metodo_preservacao=request.form.get("metodo_preservacao"),
                 local_armazenamento=request.form.get("local_armazenamento"),
-                responsavel=request.form.get("responsavel"),
-                data_cadastro=data_cad,
                 observacoes=request.form.get("observacoes"),
                 publicacoes=process_publicacoes(),
-                status=status,
+                status=STATUS_PUBLIC,
                 owner_id=user.id,
             )
             db.session.add(registro)
@@ -388,29 +395,12 @@ def editar(id):
             registro.tipo = request.form["tipo"]
             registro.genero = request.form["genero"]
             registro.especie = request.form["especie"]
-            registro.cepa_strain = request.form.get("cepa_strain")
-            registro.origem = request.form.get("origem")
-            registro.local_coleta = request.form.get("local_coleta")
-            registro.data_isolamento = (
-                datetime.strptime(request.form["data_isolamento"], "%Y-%m-%d").date()
-                if request.form.get("data_isolamento")
-                else None
-            )
             registro.meio_cultivo = request.form.get("meio_cultivo")
             registro.temperatura_cultivo = request.form.get("temperatura_cultivo")
             registro.metodo_preservacao = request.form.get("metodo_preservacao")
             registro.local_armazenamento = request.form.get("local_armazenamento")
-            registro.responsavel = request.form.get("responsavel")
-            registro.data_cadastro = (
-                datetime.strptime(request.form["data_cadastro"], "%Y-%m-%d").date()
-                if request.form.get("data_cadastro")
-                else registro.data_cadastro
-            )
             registro.observacoes = request.form.get("observacoes")
             registro.publicacoes = process_publicacoes()
-            status = request.form.get("status")
-            if status in (STATUS_PUBLIC, STATUS_PRIVATE):
-                registro.status = status
             db.session.commit()
             generate_qr(registro)
             flash(_("Record updated successfully!"), "success")
@@ -574,7 +564,16 @@ def excluir_lote():
 @main.route("/colecao/pdf")
 @role_required(ROLE_ADMIN)
 def pdf():
-    registros = Colecao.query.order_by(Colecao.id.asc()).all()
+    ids = []
+    for raw_id in request.args.getlist("ids"):
+        try:
+            ids.append(int(raw_id))
+        except (TypeError, ValueError):
+            continue
+    query = Colecao.query
+    if ids:
+        query = query.filter(Colecao.id.in_(ids))
+    registros = query.order_by(Colecao.id.asc()).all()
     pdf_buffer = generate_qr_pdf(registros)
     return Response(
         pdf_buffer.getvalue(),

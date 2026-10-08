@@ -50,22 +50,6 @@
         <input type="text" name="especie" class="form-control" required value="{{ registro.especie if registro else '' }}">
     </div>
     <div class="col-md-4">
-        <label class="form-label">{{ _('Strain') }}</label>
-        <input type="text" name="cepa_strain" class="form-control" value="{{ registro.cepa_strain if registro else '' }}">
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">{{ _('Origin') }}</label>
-        <input type="text" name="origem" class="form-control" value="{{ registro.origem if registro else '' }}">
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">{{ _('Collection Site') }}</label>
-        <input type="text" name="local_coleta" class="form-control" value="{{ registro.local_coleta if registro else '' }}">
-    </div>
-    <div class="col-md-3">
-        <label class="form-label">{{ _('Isolation Date') }}</label>
-        <input type="date" name="data_isolamento" class="form-control" value="{{ registro.data_isolamento if registro else '' }}">
-    </div>
-    <div class="col-md-3">
         <label class="form-label">{{ _('Culture Medium') }}</label>
         <input type="text" name="meio_cultivo" class="form-control" value="{{ registro.meio_cultivo if registro else '' }}">
     </div>
@@ -80,21 +64,6 @@
     <div class="col-md-3">
         <label class="form-label">{{ _('Storage Location') }}</label>
         <input type="text" name="local_armazenamento" class="form-control" value="{{ registro.local_armazenamento if registro else '' }}">
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">{{ _('Responsible') }}</label>
-        <input type="text" name="responsavel" class="form-control" value="{{ registro.responsavel if registro else '' }}">
-    </div>
-    <div class="col-md-3">
-        <label class="form-label">{{ _('Registration Date') }}</label>
-        <input type="date" name="data_cadastro" class="form-control" value="{{ registro.data_cadastro if registro else '' }}">
-    </div>
-    <div class="col-md-3">
-        <label class="form-label">{{ _('Status') }}</label>
-        <select name="status" class="form-select">
-            <option value="public" {{ 'selected' if (registro and registro.status == 'public') or not registro else '' }}>{{ _('Public') }}</option>
-            <option value="private" {{ 'selected' if registro and registro.status == 'private' else '' }}>{{ _('Private') }}</option>
-        </select>
     </div>
     <div class="col-12">
         <label class="form-label">{{ _('Observations') }}</label>

@@ -4,3 +4,4 @@ instance/
 static/qr_codes/
 static/uploads/
 *.pyc
+backups/

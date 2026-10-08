@@ -36,7 +36,14 @@ docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" "$DB_CONTAINER_ID" \
 mv "$TMP" "$TARGET"
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backup written: $TARGET ($(du -h "$TARGET" | cut -f1))"
 
-PRUNED="$(find "$BACKUP_DIR" -maxdepth 1 -name 'bipagen_*.sql.gz' -mtime +"$RETENTION_DAYS" -print -delete)"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Converting dump to CSV and sending it by email"
+if python3 "$PROJECT_DIR/scripts/backup_email.py" "$TARGET"; then
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backup CSV emailed"
+else
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: could not email the backup CSV" >&2
+fi
+
+PRUNED="$(find "$BACKUP_DIR" -maxdepth 1 \( -name 'bipagen_*.sql.gz' -o -name 'bipagen_*.csv' \) -mtime +"$RETENTION_DAYS" -print -delete)"
 if [ -n "$PRUNED" ]; then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] Pruned backups older than $RETENTION_DAYS days:"
     echo "$PRUNED"
